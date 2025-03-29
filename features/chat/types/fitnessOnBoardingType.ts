@@ -7,7 +7,7 @@ export interface FitnessFormData {
     fitnessGoal: string;
     healthAndPhysicalCapacity: string;
     workoutAccess: string;
-    message: string;
+    message?: string;
 }
 
 export interface FitnessOnboardingFormProps {
