@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {FormEvent, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -25,7 +25,8 @@ const useFitnessOnBoardingForm = (onSubmit: (data: FitnessFormValues) => void) =
     getValues,
   } = methods;
 
-  const handlePersonalInfoSubmit = async () => {
+  const handlePersonalInfoSubmit = async (e: FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     // Validate only the personal info fields
     const result = await trigger(["name", "age", "gender", "weight"]);
     if (result) {
@@ -33,7 +34,8 @@ const useFitnessOnBoardingForm = (onSubmit: (data: FitnessFormValues) => void) =
     }
   };
 
-  const handleDetailsSubmit = async () => {
+  const handleDetailsSubmit = async (e: FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     // Validate all fields
     const result = await trigger();
     if (result) {

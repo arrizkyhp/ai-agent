@@ -1,38 +1,24 @@
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowRight } from "lucide-react";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Control } from "react-hook-form";
 import { FitnessFormValues } from "@/features/chat/types/fitnessOnBoardingType";
-import {StepperStep} from "@/features/chat/components/types/stepperStep";
-import Stepper from "../../Stepper";
 
 interface OnBoardingPersonalInfoProps {
   control: Control<FitnessFormValues>;
-  handlePersonalInfoSubmit: () => Promise<void>;
-  step: StepperStep;
 }
 
 const OnBoardingPersonalInfo = ({
   control,
-  handlePersonalInfoSubmit,
-  step,
 }: OnBoardingPersonalInfoProps) => {
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <>
       <CardHeader>
-          <Stepper currentStep={step} />
-        {/*<StepperComponent />*/}
         <CardTitle>Welcome! Tell us about yourself.</CardTitle>
       </CardHeader>
       <CardContent>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handlePersonalInfoSubmit();
-          }}
+        <div
           className="space-y-4"
         >
           <FormField
@@ -110,13 +96,9 @@ const OnBoardingPersonalInfo = ({
               </FormItem>
             )}
           />
-
-          <Button type="submit" className="w-full">
-            Next <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </form>
+        </div>
       </CardContent>
-    </Card>
+    </>
   );
 };
 

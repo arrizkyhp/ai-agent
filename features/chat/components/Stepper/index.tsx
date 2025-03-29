@@ -11,7 +11,7 @@ const Stepper = ({
   ]
 }: StepperProps) => {
   return (
-    <div className="flex items-center justify-center mb-6">
+    <div className="flex items-center justify-center p-6">
       <div className="flex items-center w-full max-w-md">
         {steps.map((step, index) => (
           <Fragment key={step.id}>

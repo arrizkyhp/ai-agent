@@ -1,43 +1,28 @@
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowRight, ArrowLeft } from "lucide-react";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Control } from "react-hook-form";
 import { FitnessFormValues } from "@/features/chat/types/fitnessOnBoardingType";
-import { StepperStep } from "@/features/chat/components/types/stepperStep";
-import Stepper from "../../Stepper";
 
 interface OnBoardingDetailsStepProps {
   control: Control<FitnessFormValues>;
-  handleDetailsSubmit: () => Promise<void>;
-  goToPersonalInfo: () => void;
-  step: StepperStep;
   userName: string;
 }
 
 const OnBoardingDetailsStep = ({
   control,
-  handleDetailsSubmit,
-  goToPersonalInfo,
-  step,
   userName,
 }: OnBoardingDetailsStepProps) => {
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <>
       <CardHeader>
-        <Stepper currentStep={step} />
         <CardTitle>
           Hello, {userName}! Let&#39;s create your fitness profile
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleDetailsSubmit();
-          }}
+        <div
           className="space-y-4"
         >
           <FormField
@@ -141,22 +126,10 @@ const OnBoardingDetailsStep = ({
             )}
           />
 
-          <div className="flex gap-2 mt-4">
-            <Button
-              type="button"
-              className="flex-1"
-              variant="outline"
-              onClick={goToPersonalInfo}
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" /> Back
-            </Button>
-            <Button type="submit" className="flex-1">
-              Review <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </div>
-        </form>
+
+        </div>
       </CardContent>
-    </Card>
+    </>
   );
 };
 
