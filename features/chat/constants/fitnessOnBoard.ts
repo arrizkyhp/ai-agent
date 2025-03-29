@@ -1,6 +1,6 @@
-import {FitnessFormData} from "../types/fitnessOnBoardingType";
+import {FitnessFormValues} from "@/features/chat/types/fitnessOnBoardingType";
 
-export const INITIAL_ON_BOARDING_FORM_DATA: FitnessFormData = {
+export const INITIAL_ON_BOARDING_FORM_DATA: FitnessFormValues = {
     name: "",
     age: "",
     gender: "",

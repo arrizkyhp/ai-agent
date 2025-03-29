@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import {useState} from "react";
 import {ToolInvocation} from "ai";
-import { FitnessFormData } from "@/features/chat/types/fitnessOnBoardingType";
+import { FitnessFormValues } from "@/features/chat/types/fitnessOnBoardingType";
 import FitnessOnboardingForm from "../components/FitnessOnboardingForm/FitnessOnboardingForm";
 
 const ChatWorkoutCleanView = () => {
@@ -19,10 +19,11 @@ const ChatWorkoutCleanView = () => {
         api: '/api/workout-clean',
     });
 
-    const handleOnboardingSubmit = (formData: FitnessFormData) => {
+    const handleOnboardingSubmit = (formData: FitnessFormValues) => {
+        const { message = '' } = formData || {};
 
         // Set the onboarding message and mark as onboarded
-        setInput(formData.message);
+        setInput(message);
         setIsOnboarded(true);
 
         // Immediately submit the form data to trigger the AI response
@@ -58,7 +59,7 @@ const ChatWorkoutCleanView = () => {
                         </div>
                         {args.message && (
                             <div className="mt-2 italic text-muted-foreground">
-                                &#34;{args.message}&#34;
+                                {`"${args.message}"`}
                             </div>
                         )}
                     </div>
