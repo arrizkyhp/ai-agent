@@ -59,7 +59,7 @@ export async function POST(req: Request) {
   const contextMessages = manageContext(messages);
 
   const result = streamText({
-    model: ollama("gemma3"),
+    model: ollama("qwen2.5:3b"),
     messages: contextMessages,
     system: `You are a helpful assistant that make workout programme.`,
   });
