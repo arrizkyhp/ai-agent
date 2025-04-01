@@ -10,6 +10,7 @@ import {StepperStep} from "@/features/chat/components/types/stepperStep";
 
 const useFitnessOnBoardingForm = (onSubmit: (data: FitnessFormValues) => void) => {
   const [step, setStep] = useState<StepperStep>("name");
+  const [direction, setDirection] = useState(0);
 
   // Initialize form with React Hook Form and Zod validation
   const methods = useForm<FitnessFormValues>({
@@ -23,10 +24,12 @@ const useFitnessOnBoardingForm = (onSubmit: (data: FitnessFormValues) => void) =
     handleSubmit,
     trigger,
     getValues,
+    formState: { errors }
   } = methods;
 
   const handlePersonalInfoSubmit = async (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setDirection(1);
     // Validate only the personal info fields
     const result = await trigger(["name", "age", "gender", "weight"]);
     if (result) {
@@ -36,6 +39,7 @@ const useFitnessOnBoardingForm = (onSubmit: (data: FitnessFormValues) => void) =
 
   const handleDetailsSubmit = async (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setDirection(1);
     // Validate all fields
     const result = await trigger();
     if (result) {
@@ -64,13 +68,21 @@ const useFitnessOnBoardingForm = (onSubmit: (data: FitnessFormValues) => void) =
   };
 
   // Navigation handlers
-  const goToPersonalInfo = () => setStep("name");
-  const goToDetails = () => setStep("details");
+  const goToPersonalInfo = () => {
+    setDirection(-1);
+    setStep("name")
+  };
+  const goToDetails = () => {
+    setDirection(-1);
+    setStep("details")
+  };
 
   return {
+    direction,
     step,
     methods,
     control,
+    errors,
     handleSubmit,
     getValues,
     handlePersonalInfoSubmit,

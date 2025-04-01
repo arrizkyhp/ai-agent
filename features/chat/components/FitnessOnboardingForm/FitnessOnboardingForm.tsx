@@ -10,9 +10,12 @@ import {Card} from "@/components/ui/card";
 import Stepper from "@/features/chat/components/Stepper";
 import {Button} from "@/components/ui/button";
 import {ArrowLeft, ArrowRight, ThumbsUp} from "lucide-react";
+import { AnimatePresence, motion, MotionConfig } from 'motion/react';
+import useMeasure from 'react-use-measure';
 
 const FitnessOnboardingForm = ({ onSubmit }: FitnessOnboardingFormProps) => {
     const {
+        direction,
         step,
         methods,
         control,
@@ -24,6 +27,7 @@ const FitnessOnboardingForm = ({ onSubmit }: FitnessOnboardingFormProps) => {
         goToPersonalInfo,
         goToDetails
     } = useFitnessOnBoardingForm(onSubmit);
+    const [ ref, bounds] = useMeasure();
 
     const renderPersonalInfoStep = () => (
         <OnBoardingPersonalInfo
@@ -50,66 +54,122 @@ const FitnessOnboardingForm = ({ onSubmit }: FitnessOnboardingFormProps) => {
 
     return (
         <FormProvider {...methods}>
-            <Card className="w-full max-w-md mx-auto">
-                <Stepper currentStep={step} />
-                <form>
-                    {step === "name" && renderPersonalInfoStep()}
-                    {step === "details" && renderDetailsStep()}
-                    {step === "overview" && renderOverviewStep()}
+            <MotionConfig
+              transition={{ duration: 0.5, type: "spring", bounce: 0 }}
+            >
+                <motion.div animate={{ height: bounds.height }}  className="w-full max-w-md mx-auto">
+                    <Card ref={ref} className="overflow-hidden">
+                    <Stepper currentStep={step} />
+                    <AnimatePresence mode="popLayout" initial={false} custom={direction}>
+                        <form>
+                            <motion.div
+                                key={step}
+                                variants={variants}
+                                initial="initial"
+                                animate="active"
+                                exit="exit"
+                                custom={direction}
+                            >
+                                {step === "name" && renderPersonalInfoStep()}
+                                {step === "details" && renderDetailsStep()}
+                                {step === "overview" && renderOverviewStep()}
+                            </motion.div>
 
-                    <div className="p-6 pt-0">
-                        {step === "name" && (
-                            <Button onClick={handlePersonalInfoSubmit} type="submit" className="w-full">
-                                Next <ArrowRight className="ml-2 h-4 w-4" />
-                            </Button>
-                        )}
+                        <div className="p-6 pt-0">
+                            {step === "name" && (
+                              <motion.div
+                                layoutId="next"
+                                className="flex gap-2 mt-4"
+                                layout
+                              >
+                                <Button onClick={handlePersonalInfoSubmit} type="submit" className="w-full">
+                                    Next <ArrowRight className="ml-2 h-4 w-4" />
+                                </Button>
+                              </motion.div>
+                            )}
 
-                        {step === "details" && (
-                            <div className="flex gap-2 mt-4">
-                                <Button
-                                    type="button"
-                                    className="flex-1"
-                                    variant="outline"
-                                    onClick={goToPersonalInfo}
-                                >
-                                    <ArrowLeft className="mr-2 h-4 w-4" /> Back
-                                </Button>
-                                <Button
-                                    type="button"
-                                    onClick={handleDetailsSubmit}
-                                    className="flex-1"
-                                >
-                                    Review <ArrowRight className="ml-2 h-4 w-4" />
-                                </Button>
-                            </div>
-                        )}
+                            {step === "details" && (
+                                <div className="grid grid-cols-2 items-center gap-2 mt-4">
+                                    <Button
+                                        type="button"
+                                        className="flex-1"
+                                        variant="outline"
+                                        onClick={goToPersonalInfo}
+                                    >
+                                        <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                                    </Button>
+                                    <motion.div
+                                      layoutId="next"
+                                      className="flex-1 w-full"
+                                      layout
+                                    >
+                                        <Button
+                                            type="button"
+                                            onClick={handleDetailsSubmit}
+                                            className="w-full"
+                                        >
+                                            <motion.span layout  className="flex items-center">
+                                                Review <ArrowRight className="ml-2 h-4 w-4" />
+                                            </motion.span>
+                                        </Button>
+                                    </motion.div>
+                                </div>
+                            )}
 
-                        {step === "overview" && (
-                            <div className="flex gap-2 mt-4">
-                                <Button
-                                    type="button"
-                                    className="flex-1"
-                                    variant="outline"
-                                    onClick={goToDetails}
+                            {step === "overview" && (
+                                <motion.div
+                                  initial={{
+                                      opacity: 0,
+                                  }}
+                                  animate={{
+                                      opacity: 1
+                                  }}
+                                  className="flex gap-2 mt-4"
                                 >
-                                    <ArrowLeft className="mr-2 h-4 w-4" /> Back
-                                </Button>
-                                <Button
-                                    type="button"
-                                    onClick={handleSubmit(handleFinalSubmit)}
-                                    className="flex-1 bg-green-600 hover:bg-green-700"
-                                >
-                                    Confirm <ThumbsUp className="ml-2 h-4 w-4" />
-                                </Button>
-                            </div>
-                        )}
-                    </div>
-
-                </form>
-            </Card>
+                                    <Button
+                                        type="button"
+                                        className="flex-1"
+                                        variant="outline"
+                                        onClick={goToDetails}
+                                    >
+                                        <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                                    </Button>
+                                    <Button
+                                        type="button"
+                                        onClick={handleSubmit(handleFinalSubmit)}
+                                        className="flex-1 bg-green-600 hover:bg-green-700"
+                                    >
+                                        Confirm <ThumbsUp className="ml-2 h-4 w-4" />
+                                    </Button>
+                                </motion.div>
+                            )}
+                        </div>
+                    </form>
+                    </AnimatePresence>
+                </Card>
+                </motion.div>
+            </MotionConfig>
         </FormProvider>
     );
 };
 
+const variants = {
+    initial: (direction: number) => {
+       return {
+           x: `${110 * direction}%`,
+           opacity: 0,
+       }
+    },
+    active: {
+        x: 0,
+        opacity: 1,
+    },
+    exit: (direction: number) => {
+        return {
+            x: `${-110 * direction}%`,
+            opacity: 0,
+        }
+    }
+}
 export default FitnessOnboardingForm;
 

@@ -14,6 +14,7 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
+import { AnimatePresence, motion } from "motion/react";
 
 const Form = FormProvider
 
@@ -90,12 +91,12 @@ const FormLabel = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
 >(({ className, ...props }, ref) => {
-  const { error, formItemId } = useFormField()
+  const { formItemId } = useFormField()
 
   return (
     <Label
       ref={ref}
-      className={cn(error && "text-destructive", className)}
+      className={className}
       htmlFor={formItemId}
       {...props}
     />
@@ -148,20 +149,40 @@ const FormMessage = React.forwardRef<
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField()
   const body = error ? String(error?.message ?? "") : children
-
-  if (!body) {
-    return null
-  }
+    console.log({formMessageId: formMessageId})
 
   return (
-    <p
-      ref={ref}
-      id={formMessageId}
-      className={cn("text-[0.8rem] font-medium text-destructive absolute right-0 -top-1", className)}
-      {...props}
-    >
-      {body}
-    </p>
+    <AnimatePresence   mode="wait" presenceAffectsLayout>
+      {body && (
+        <motion.div
+          id={formMessageId}
+          key="error-message"
+          layout
+          initial={{
+            opacity: 0,
+            y: 10,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          exit={{
+            opacity: 0,
+            y: 10,
+          }}
+          className="absolute right-0 -top-1"
+        >
+          <p
+            ref={ref}
+            id={formMessageId}
+            className={cn("text-[0.8rem] font-medium text-destructive ", className)}
+            {...props}
+          >
+            {body}
+          </p>
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 })
 FormMessage.displayName = "FormMessage"
