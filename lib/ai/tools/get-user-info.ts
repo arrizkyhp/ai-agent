@@ -9,7 +9,7 @@ const showFitnessProfile = tool({
         fitnessGoal: z.enum(['Building Muscle', 'Losing Fat', 'Improve endurance', 'General Fitness']).describe('Get user information fitness goal'),
         healthAndPhysicalCapacity: z.string().describe('Get user physical limitations or past injuries'),
         workoutAccess: z.enum(['gym', 'home']).describe('Get user have access to a gym or prefer to workout at home'),
-        message: z.string().describe('Additional information to user if any, you already have the information and already show to user'),
+        message: z.string().describe('Greetings or Introduction and Additional information to user if any, you already have the information and already show to user'),
     }),
     execute: async ({ fitnessLevel, fitnessGoal, healthAndPhysicalCapacity, message }) => {
         return {

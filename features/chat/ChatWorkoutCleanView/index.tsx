@@ -117,6 +117,7 @@ const ChatWorkoutCleanView = () => {
                 ))}
             </div>
 
+            {/* !TODO: ADD Suggestion chat if fitness Profile introduction appears */}
             <div className="sticky bottom-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-4 border-t">
                 <form onSubmit={handleSubmit} className="flex gap-2">
                     <Card className="flex-1 p-1 rounded-lg border">
