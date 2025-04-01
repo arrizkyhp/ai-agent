@@ -16,7 +16,7 @@ const OnBoardingPersonalInfo = ({
   return (
     <>
       <CardHeader>
-        <CardTitle>Welcome! Tell us about yourself.</CardTitle>
+        <CardTitle className="text-2xl">Welcome! <br /> Tell us about yourself.</CardTitle>
       </CardHeader>
       <CardContent>
         <AnimatePresence>

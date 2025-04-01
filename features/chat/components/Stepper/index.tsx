@@ -12,7 +12,7 @@ const Stepper = ({
   ],
    direction,
 }: StepperProps) => {
-  console.log({direction})
+
   return (
     <div className="flex items-center justify-center p-6">
       <div className="flex items-center w-full max-w-md">
@@ -25,7 +25,7 @@ const Stepper = ({
                     currentStep === step.id || 
                     steps.findIndex(s => s.id === currentStep) > index
                       ? "bg-primary border-primary text-white"
-                      : "bg-gray-200 border-gray-300 text-gray-600"
+                      : "bg-gray-100 border-gray-200 text-gray-400"
                   }`}
                 >
                   <AnimatePresence mode="wait">
@@ -49,16 +49,18 @@ const Stepper = ({
                   </AnimatePresence>
 
                 </div>
-                <span className="text-xs mt-1">{step.label}</span>
+                  <div className="absolute -bottom-7 w-24 -inset-x-4 ">
+                    <span className={`text-xs mt-1 px-2 py-2  ${currentStep === step.id ? 'text-neutral-900 ' : 'text-neutral-400'} rounded-sm`}>{step.label}</span>
+                  </div>
+
               </div>
 
 
               {/* Connector (except after the last step) */}
               {index < steps.length - 1 && (
-                <div className="flex-1 h-1 mx-2 relative">
-                  <div className="absolute inset-0 bg-gray-300" />
-                  {direction}
-                  <AnimatePresence mode="wait" initial={false} custom={direction}>
+                <div className="flex-1 h-1 relative">
+                  <div className="absolute inset-0 bg-gray-200" />
+                    <AnimatePresence mode="wait" initial={false} custom={direction}>
                     {/* Currently if direction is -1 then -1 the animation is right  */}
                     {steps.findIndex(s => s.id === currentStep) > index && (
                       <motion.div

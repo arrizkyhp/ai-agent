@@ -17,8 +17,8 @@ const OnBoardingDetailsStep = ({
   return (
     <>
       <CardHeader>
-        <CardTitle>
-          Hello, {userName}! Let&#39;s create your fitness profile
+        <CardTitle className="text-2xl">
+          Hello, {userName}! <br /> Let&#39;s create your fitness profile
         </CardTitle>
       </CardHeader>
       <CardContent>

@@ -47,8 +47,6 @@ const FitnessOnboardingForm = ({ onSubmit }: FitnessOnboardingFormProps) => {
             getValues={getValues}
             handleSubmit={handleSubmit}
             handleFinalSubmit={handleFinalSubmit}
-            goToPersonalInfo={goToPersonalInfo}
-            goToDetails={goToDetails}
         />
     );
 
