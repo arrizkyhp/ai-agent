@@ -6,4 +6,5 @@ export interface StepperProps {
         id: StepperStep;
         label: string;
     }[];
+    direction: number;
 }
