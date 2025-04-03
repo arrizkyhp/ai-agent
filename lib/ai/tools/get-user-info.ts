@@ -1,20 +1,10 @@
 import { tool } from 'ai';
-import { z } from "zod";
+import { fitnessProfileSchema } from '@/types/fitnessProfile';
 
 const showFitnessProfile = tool({
     description: 'Show user information about fitness level, fitness goal, healthAndPhysicalCapacity, workoutAccess and message, ' +
         'on message ask if user have any additional information to share or this is okay',
-    parameters: z.object({
-        name: z.string().describe('Get user information name'),
-        age: z.string().describe('Get user information age'),
-        gender: z.string().describe('Get user information gender'),
-        weight: z.string().describe('Get user information weight'),
-        fitnessLevel: z.enum(['beginner', 'intermediate', 'advanced']).describe('Get user information fitness level'),
-        fitnessGoal: z.enum(['Building Muscle', 'Losing Fat', 'Improve endurance', 'General Fitness']).describe('Get user information fitness goal'),
-        healthAndPhysicalCapacity: z.string().describe('Get user physical limitations or past injuries'),
-        workoutAccess: z.enum(['gym', 'home']).describe('Get user have access to a gym or prefer to workout at home'),
-        message: z.string().describe('Greetings or Introduction and Additional information to user if any, you already have the information and already show to user'),
-    }),
+    parameters: fitnessProfileSchema,
     execute: async ({
         name,
         age,
