@@ -1,5 +1,5 @@
-import ChatWorkoutCleanView from "@/features/chat/ChatWorkoutCleanView";
+import ChatWorkoutView from "@/features/chat/ChatWorkoutView";
 
 export default function WorkoutCleanPage() {
-    return <ChatWorkoutCleanView />;
+    return <ChatWorkoutView />;
 }

@@ -1,128 +1,31 @@
 "use client";
 
 import { MemoizedMarkdown } from "@/components/memoized-markdown";
-import {useChat} from "@ai-sdk/react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { BookOpenCheck, Dumbbell, Home, Target, HeartPulse, ArrowUp } from 'lucide-react';
+import { BookOpenCheck, Dumbbell, Home, Target, HeartPulse, ArrowUp, UserCircle } from 'lucide-react';
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { useEffect, useRef, useState } from 'react';
 import {ToolInvocation} from "ai";
-import { FitnessFormValues } from "@/features/chat/types/fitnessOnBoardingType";
 import FitnessOnboardingForm from "../components/FitnessOnboardingForm/FitnessOnboardingForm";
+import ThinkingMessage from './components/ThinkingMessage';
+import InitialLoaderMessage from './components/InitialLoaderMessage';
+import useChatWorkoutView from './ChatWorkoutView.hooks';
 
-const ThinkingMessage = () => (
-  // <Card className="p-4 rounded-lg bg-background border">
-      <div className="flex gap-3 py-8" style={{ minHeight: "calc(100vh - 200px)"}}>
-          <div className="flex-1 flex flex-col gap-2 ">
-              <div className="flex justify-start space-x-2 pt-1">
-                  {[0, 1, 2].map((i) => (
-                    <div
-                      key={i}
-                      className="w-2.5 h-2.5 rounded-full bg-primary/70 animate-pulse"
-                      style={{
-                          animationDelay: `${i * 300}ms`,
-                          animationDuration: "1.5s",
-                      }}
-                    />
-                  ))}
-              </div>
-          </div>
-      </div>
-  // </Card>
-);
 
-// !TODO: Change this to skeleton loader tools Fitness Profile
-// Special loader for the initial AI response
-const InitialAILoader = () => (
-  <Card className="p-4 rounded-lg bg-background border">
-      <div className="flex gap-3">
-          <Avatar>
-              <AvatarFallback>AI</AvatarFallback>
-          </Avatar>
-          <div className="flex-1">
-                <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-lg text-slate-800">AI Assistant</h3>
-                </div>
-              <div className="flex flex-col gap-2 mt-2">
-                  <div className="text-sm text-muted-foreground italic">
-                      Analyzing your fitness profile, please wait...
-                  </div>
-                  <div className="flex justify-start space-x-2 pt-1">
-                      {[0, 1, 2].map((i) => (
-                        <div
-                          key={i}
-                          className="w-2.5 h-2.5 rounded-full bg-primary/70 animate-pulse"
-                          style={{
-                              animationDelay: `${i * 300}ms`,
-                              animationDuration: "1.5s",
-                          }}
-                        />
-                      ))}
-                  </div>
-              </div>
-          </div>
-      </div>
-  </Card>
-);
-const ChatWorkoutCleanView = () => {
-    const [isOnboarded, setIsOnboarded] = useState(false);
-    const [isWaitingForInitialResponse, setIsWaitingForInitialResponse] =
-      useState(false);
-    const [shouldSubmitOnboarding, setShouldSubmitOnboarding] = useState(false);
-    const messagesContainerRef = useRef<HTMLDivElement>(null);
-    const newMessageRef = useRef<HTMLDivElement>(null);
-
-    const { messages, input, status, setInput, handleInputChange, handleSubmit } = useChat({
-        api: '/api/workout-clean',
-    });
-
-    // Add this effect to scroll to the latest user message
-    useEffect(() => {
-        if (newMessageRef.current) {
-            // Get the current scroll position
-            const container = messagesContainerRef.current;
-            if (container) {
-                const headerOffset = 90; // Height of the floating header
-
-                // Calculate position with offset
-                const elementPosition = newMessageRef.current.getBoundingClientRect().top;
-                const offsetPosition = elementPosition - headerOffset;
-
-                // Scroll with offset
-                window.scrollBy({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        }
-    }, [messages]);
-
-    const handleOnboardingSubmit = (formData: FitnessFormValues) => {
-        const { message = '' } = formData || {};
-
-        // Set the onboarding message and mark as onboarded
-        setInput(message);
-        setIsOnboarded(true);
-        setIsWaitingForInitialResponse(true);
-        setShouldSubmitOnboarding(true);
-
-    };
-
-    useEffect(() => {
-        if (isOnboarded && shouldSubmitOnboarding) {
-            handleSubmit();
-            setShouldSubmitOnboarding(false); // Only submit once
-        }
-    }, [isOnboarded, handleSubmit, shouldSubmitOnboarding]);
-
-    // Clear the "waiting" flag when *any* assistant message appears
-    useEffect(() => {
-        if (messages.some((message) => message.role === "assistant")) {
-            setIsWaitingForInitialResponse(false);
-        }
-    }, [messages]);
+const ChatWorkoutView = () => {
+    const {
+        handleInputChange,
+        handleOnboardingSubmit,
+        handleSubmit,
+        isWaitingForInitialResponse,
+        isOnboarded,
+        input,
+        messagesContainerRef,
+        messages,
+        newMessageRef,
+        status,
+    } = useChatWorkoutView();
 
     const renderToolInfo = (toolInvocation: ToolInvocation) => {
         const { toolName, state, args } = toolInvocation;
@@ -130,11 +33,37 @@ const ChatWorkoutCleanView = () => {
         if (toolName === 'showFitnessProfile' && state === 'result') {
             return (
               <>
-                  <Card className="w-full max-w-md mx-auto my-4">
+                  <Card className="w-full  mx-auto my-4">
                       <div className="p-4 space-y-2">
+                          <div className="flex justify-between">
+                              <div className="flex items-center gap-2">
+                                  <BookOpenCheck className="h-5 w-5 text-primary" />
+                                  <h3 className="font-semibold text-xl">Fitness Profile</h3>
+                              </div>
+                              <p className="inline-flex items-center px-2.5 capitalize font-semibold text-xs rounded-full
+                              border border-primary/30 bg-primary/10">
+                                  {args.fitnessLevel}
+                              </p>
+                          </div>
+                          <h4 className="flex items-center font-medium">
+                              <UserCircle className="h-4 w-4 mr-2 text-primary"/>
+                              Personal Information
+                          </h4>
                           <div className="flex items-center gap-2">
-                              <BookOpenCheck className="h-5 w-5 text-primary" />
-                              <h3 className="font-semibold">Fitness Profile</h3>
+                              <Dumbbell className="h-4 w-4 text-muted-foreground" />
+                              <span>Name: {args.name}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                              <Dumbbell className="h-4 w-4 text-muted-foreground" />
+                              <span>Name: {args.age}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                              <Dumbbell className="h-4 w-4 text-muted-foreground" />
+                              <span>Name: {args.gender}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                              <Dumbbell className="h-4 w-4 text-muted-foreground" />
+                              <span>Name: {args.weight}</span>
                           </div>
                           <div className="flex items-center gap-2">
                               <Dumbbell className="h-4 w-4 text-muted-foreground" />
@@ -218,11 +147,6 @@ const ChatWorkoutCleanView = () => {
                               <div className="flex gap-3">
 
                                   <div className="flex-1">
-                                      {/*<div className="font-medium mb-1">*/}
-                                      {/*    <h3 className="font-semibold text-lg text-slate-800">*/}
-                                      {/*        {message.role === "user" ? "You" : "Assistant"}*/}
-                                      {/*    </h3>*/}
-                                      {/*</div>*/}
 
                                       {message.parts.map((part) => {
                                           if (part.type === "text") {
@@ -247,7 +171,7 @@ const ChatWorkoutCleanView = () => {
                 {/* Initial AI response loader */}
                 {isWaitingForInitialResponse &&
                   <div className="min-h-[calc(100vh-200px)]">
-                      <InitialAILoader />
+                      <InitialLoaderMessage />
                   </div>
                 }
 
@@ -307,4 +231,4 @@ const ChatWorkoutCleanView = () => {
     );
 };
 
-export default ChatWorkoutCleanView;
+export default ChatWorkoutView;
