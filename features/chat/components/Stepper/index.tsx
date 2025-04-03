@@ -28,7 +28,7 @@ const Stepper = ({
                       : "bg-gray-100 border-gray-200 text-gray-400"
                   }`}
                 >
-                  <AnimatePresence mode="wait">
+                  <AnimatePresence mode="wait" initial={false}>
                     <motion.div
                       key={`${step.id}-${
                         currentStep === step.id ? "current" :
