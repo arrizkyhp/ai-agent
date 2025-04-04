@@ -3,7 +3,7 @@
 import { MemoizedMarkdown } from "@/components/memoized-markdown";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {  ArrowUp } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import {ToolInvocation} from "ai";
@@ -12,6 +12,7 @@ import ThinkingMessage from './components/ThinkingMessage';
 import InitialLoaderMessage from './components/InitialLoaderMessage';
 import useChatWorkoutView from './ChatWorkoutView.hooks';
 import FitnessProfile from '@/features/chat/ChatWorkoutView/components/FitnessProfile';
+import OverviewFitness from '@/features/chat/ChatWorkoutView/components/OverviewFitness';
 
 // !TODO: Important, chat always forget fitness profile, Add local storage
 // !TODO: add better-auth & supabase
@@ -37,6 +38,12 @@ const ChatWorkoutView = () => {
             return (
              <FitnessProfile args={args} />
             );
+        }
+
+        if (toolName === 'workoutProgramOverview' && state === 'result') {
+            return (
+              <OverviewFitness args={args} />
+            )
         }
         return null;
     };

@@ -2,6 +2,7 @@ import {createDataStreamResponse, streamText} from "ai";
 import {generateUUID} from "@/lib/utils";
 import showFitnessProfile from "@/lib/ai/tools/show-fitness-profile";
 import {createDeepSeek} from "@ai-sdk/deepseek";
+import workoutProgramOverview from '@/lib/ai/tools/workout-program-overview';
 
 export const maxDuration = 30;
 
@@ -78,8 +79,11 @@ export async function POST(req: Request) {
 
                     1. User will introduce themselves and their information
                     2. use tools showFitnessProfile based on the user information
-                    3. after that, give information what program focus, Program Structure or Program Overview, Example Workout Split
+                    3. after that, give information what overview Program focus, Program Structure, other Program like Example Workout Split or anything that related
+                       - use tools workoutProgramOverview,
+                       - if user want to add additional information update overview using workoutProgramOverview tool,
                     4. Then ask for confirmation if user need adjustment and add additional information that user need or proceed to make full program to proceed with the program generation.
+                    
                     
                         Interaction Guidelines:
                         - Be encouraging and supportive
@@ -95,10 +99,11 @@ export async function POST(req: Request) {
                         - Offer modifications or progressions
                         - Help with form and technique
                     `,
-                    experimental_activeTools: ['showFitnessProfile'],
+                    experimental_activeTools: ['showFitnessProfile', 'workoutProgramOverview'],
                     experimental_generateMessageId: generateUUID,
                     tools: {
-                        showFitnessProfile
+                        showFitnessProfile,
+                        workoutProgramOverview,
                     }
                 });
 
