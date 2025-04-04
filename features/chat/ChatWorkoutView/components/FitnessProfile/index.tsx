@@ -12,6 +12,11 @@ const FitnessProfile = (props: FitnessProfileComponentProps) => {
 
   return (
     <>
+      {args.introduction && (
+        <div className="mb-2 ">
+          {args.introduction}
+        </div>
+      )}
       <Card className="w-full mx-auto mb-4">
         <div className="p-4 space-y-2">
           <div className="flex justify-between items-center">
@@ -89,7 +94,7 @@ const FitnessProfile = (props: FitnessProfileComponentProps) => {
       </Card>
       {args.message && (
         <div className="mt-2 ">
-          {`"${args.message}"`}
+          {args.message}
         </div>
       )}
     </>

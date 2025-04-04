@@ -13,6 +13,7 @@ const showFitnessProfile = tool({
         fitnessLevel,
         fitnessGoal,
         healthAndPhysicalCapacity,
+        introduction,
         message
     }) => {
         return {
@@ -23,6 +24,7 @@ const showFitnessProfile = tool({
             fitnessLevel,
             fitnessGoal,
             healthAndPhysicalCapacity,
+            introduction,
             message,
         };
     },

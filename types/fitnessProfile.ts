@@ -10,7 +10,8 @@ export const fitnessProfileSchema = z.object({
   fitnessGoal: z.enum(['Building Muscle', 'Losing Fat', 'Improve endurance', 'General Fitness']).describe('Get user information fitness goal'),
   healthAndPhysicalCapacity: z.string().describe('Get user physical limitations or past injuries'),
   workoutAccess: z.enum(['gym', 'home']).describe('Get user have access to a gym or prefer to workout at home'),
-  message: z.string().describe('Greetings or Introduction and Additional information to user if any, you already have the information and already show to user'),
+  introduction: z.string().describe('Warm greetings or Introduction about yourself to user, you are AI Assistant fitness that will help user'),
+  message: z.string().describe('Additional information to user if any, ask if theres any information or question to add, you already have the information and already show to user'),
 });
 
 // Create TypeScript interface from the zod schema

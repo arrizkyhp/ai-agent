@@ -1,6 +1,6 @@
 import {createDataStreamResponse, streamText} from "ai";
 import {generateUUID} from "@/lib/utils";
-import showFitnessProfile from "@/lib/ai/tools/get-user-info";
+import showFitnessProfile from "@/lib/ai/tools/show-fitness-profile";
 import {createDeepSeek} from "@ai-sdk/deepseek";
 
 export const maxDuration = 30;
