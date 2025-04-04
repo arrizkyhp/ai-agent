@@ -80,21 +80,23 @@ const OverviewFitness = (props: OverviewFitnessProps) => {
                     {item.description}
                   </p>
                   {item.examples && item.examples.length > 0 && (
-                    <div className="p-3 flex flex-col gap-4">
+                    <div className="flex flex-col gap-4 ">
                       {item.examples.map((itemExample, indexExample) => (
-                        <div key={indexExample}>
+                        <div key={indexExample} className="bg-gray-100 p-3 rounded-lg border border-gray-200">
                           <h5 className="text-base font-medium">{itemExample.title}</h5>
                           <p className="text-sm text-muted-foreground"> {itemExample.description}</p>
-                          <ul className="p-3 flex flex-col gap-2">
-                            {itemExample.list && (
-                              itemExample.list.map((itemListExample, indexListExample) => (
-                                <li key={indexListExample} className="flex flex-col items-start gap-1">
-                                  <p className="font-medium text-sm text-foreground">{itemListExample.title}</p>
-                                  <p className="text-sm text-muted-foreground">{itemListExample.description}</p>
-                                </li>
-                              ))
+                            {itemExample.list && itemExample.list.length > 0 && (
+                              <ul className="flex flex-col gap-2 list-disc list-outside mt-3">
+                                {
+                                  itemExample.list.map((itemListExample, indexListExample) => (
+                                    <li key={indexListExample} className="flex flex-col items-start gap-1 p-3  bg-gray-300/40 rounded-lg  border border-gray-300">
+                                      <p className="font-medium text-sm text-foreground">{itemListExample.title}</p>
+                                      <p className="text-sm text-muted-foreground">{itemListExample.description}</p>
+                                    </li>
+                                  ))
+                                }
+                              </ul>
                             )}
-                          </ul>
                         </div>
                       ))}
                     </div>

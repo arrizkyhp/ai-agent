@@ -48,20 +48,31 @@ const useFitnessOnBoardingForm = (onSubmit: (data: FitnessFormValues) => void) =
   };
 
   const handleFinalSubmit: SubmitHandler<FitnessFormValues> = (data) => {
-    // Format the data as a clear message for the AI
+    let workoutLocation = "";
+
+    if (data.workoutAccess === "Home") {
+      workoutLocation = "home";
+    } else if (data.workoutAccess === "Gym") {
+      workoutLocation = "the gym";
+    } else if (data.workoutAccess === "home & gym") {
+      workoutLocation = "both home and the gym";
+    } else {
+      workoutLocation = "an unspecified location"; // Handle unexpected values
+    }
+
     const formattedData = {
       ...data,
-      message: `Hi, I'm ${data.name}, and I'm ${data.age} years old. I am a ${
+      message: `Hi, I'm ${data.name}, ${data.age} years old, and ${
         data.gender
-      } and weight ${data.weight} kg. My fitness level is ${
+      }. I weight ${data.weight} kg. I would describe my fitness level as ${
         data.fitnessLevel
-      }, and my goal is ${data.fitnessGoal}. ${
+      }, and my primary fitness goal is ${
+        data.fitnessGoal
+      }. I prefer working out at ${workoutLocation}. ${
         data.healthAndPhysicalCapacity
-          ? `I have the following physical limitations: ${data.healthAndPhysicalCapacity}.`
-          : "I have no physical limitations."
-      } I prefer working out at ${
-        data.workoutAccess === "home" ? "home" : "the gym"
-      }.`,
+          ? `I have the following health and physical considerations: ${data.healthAndPhysicalCapacity}.`
+          : "I have no known health or physical limitations."
+      }`,
     };
 
     onSubmit(formattedData);

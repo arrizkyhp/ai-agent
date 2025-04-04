@@ -119,6 +119,7 @@ const OnBoardingDetailsStep = ({
                   <SelectContent>
                     <SelectItem value="home">Home</SelectItem>
                     <SelectItem value="gym">Gym</SelectItem>
+                    <SelectItem value="home & gym">Home and Gym</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />

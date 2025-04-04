@@ -34,6 +34,9 @@ const OnBoardingOverview = ({
     <>
       <CardHeader>
         <CardTitle className="text-2xl">Review Your Information</CardTitle>
+        <p className="text-sm text-gray-500">
+          Take a moment to review the information below before continuing. You can always edit this information later.
+        </p>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">

@@ -17,6 +17,8 @@ import OverviewFitness from '@/features/chat/ChatWorkoutView/components/Overview
 // !TODO: Important, chat always forget fitness profile, Add local storage
 // !TODO: add better-auth & supabase
 
+// !TODO: find out if generating tools has loader, if has add loader based on tool type
+
 const ChatWorkoutView = () => {
     const {
         handleInputChange,
@@ -92,6 +94,7 @@ const ChatWorkoutView = () => {
                           )}
 
                           <div
+                            key={message.id}
                             className={`p-4 rounded-lg min-w-40 h-fit ${
                               message.role === "user" ? "bg-gradient-to-br from-slate-50 to-slate-100 " : "bg-background w-full"
                             } `}
