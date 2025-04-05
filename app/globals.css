@@ -70,3 +70,24 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Step Circle fill animation */
+.clip-empty {
+  clip-path: inset(0 100% 0 0);
+}
+
+.clip-full {
+  clip-path: inset(0 0 0 0);
+}
+
+/* Delay classes for step circle fill */
+.delay-stepper {
+  transition-delay: 0.4s;
+  transition-duration: 0.5s;
+}
+
+.delay-none {
+  transition-delay: 0s;
+  transition-duration: 0.2s;
+
+}
