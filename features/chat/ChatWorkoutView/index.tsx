@@ -48,7 +48,7 @@ const ChatWorkoutView = () => {
 
   if (!isOnboarded) {
     return (
-      <div className="max-w-3xl mx-auto flex items-center  h-screen">
+      <div className="max-w-3xl mx-auto flex items-center  min-h-screen">
         <FitnessOnboardingForm onSubmit={handleOnboardingSubmit} />
       </div>
     );

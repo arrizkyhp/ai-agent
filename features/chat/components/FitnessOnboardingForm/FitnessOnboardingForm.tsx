@@ -44,7 +44,7 @@ const FitnessOnboardingForm = ({ onSubmit }: FitnessOnboardingFormProps) => {
   return (
     <FormProvider {...methods}>
       <MotionConfig transition={{ duration: 0.5, type: 'spring', bounce: 0 }}>
-        <motion.div animate={{ height: bounds.height }} className="w-full max-w-md mx-auto mt-10">
+        <motion.div animate={{ height: bounds.height }} className="w-full max-w-md mx-auto my-4">
           <Card ref={ref} className="overflow-hidden">
             <Stepper currentStep={step} direction={direction} />
             <AnimatePresence mode="popLayout" initial={false} custom={direction}>
