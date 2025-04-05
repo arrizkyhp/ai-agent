@@ -26,7 +26,7 @@ const FitnessProfile = (props: FitnessProfileComponentProps) => {
           </div>
 
           {/* Personal Information Section */}
-          <div className="bg-secondary/20 rounded-lg p-4 mb-4">
+          <div className="rounded-lg border border-gray-300 p-4 mb-4">
             <h4 className="flex items-center font-medium  mb-3">
               <UserCircle className="h-4 w-4 mr-2 text-primary" />
               Personal Information
@@ -53,7 +53,7 @@ const FitnessProfile = (props: FitnessProfileComponentProps) => {
 
           {/* Fitness Goals & Preferences */}
           <div className="grid grid-cols-2 gap-4 mb-4">
-            <div className="bg-secondary/30 rounded-lg p-3 flex flex-col">
+            <div className="rounded-lg border border-gray-300 p-3 flex flex-col">
               <div className="flex items-center mb-2">
                 <Target className="h-4 w-4 mr-2 text-primary" />
                 <span className="text-sm font-medium text-foreground">Fitness Goal</span>
@@ -67,7 +67,7 @@ const FitnessProfile = (props: FitnessProfileComponentProps) => {
                 </Badge>
               </div>
             </div>
-            <div className="bg-secondary/30 rounded-lg p-3 flex flex-col">
+            <div className="rounded-lg border border-gray-300 p-3 flex flex-col">
               <div className="flex items-center mb-2">
                 <Building className="h-4 w-4 mr-2 text-primary" />
                 <span className="text-sm font-medium text-foreground">Workout Preference</span>
@@ -81,7 +81,7 @@ const FitnessProfile = (props: FitnessProfileComponentProps) => {
                 </Badge>
               </div>
             </div>
-            <div className="bg-secondary/30 col-span-2 rounded-lg p-3 flex flex-col">
+            <div className="bg-secondary/30 col-span-2 rounded-lg border border-gray-300 p-3 flex flex-col">
               <div className="flex items-center mb-2">
                 <HeartPulse className="h-4 w-4 mr-2 text-primary" />
                 <span className="text-sm font-medium text-foreground">Physical Capacity</span>

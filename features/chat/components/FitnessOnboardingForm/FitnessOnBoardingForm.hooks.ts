@@ -50,9 +50,9 @@ const useFitnessOnBoardingForm = (onSubmit: (data: FitnessFormValues) => void) =
   const handleFinalSubmit: SubmitHandler<FitnessFormValues> = (data) => {
     let workoutLocation = '';
 
-    if (data.workoutAccess === 'Home') {
+    if (data.workoutAccess === 'home') {
       workoutLocation = 'home';
-    } else if (data.workoutAccess === 'Gym') {
+    } else if (data.workoutAccess === 'gym') {
       workoutLocation = 'the gym';
     } else if (data.workoutAccess === 'home & gym') {
       workoutLocation = 'both home and the gym';

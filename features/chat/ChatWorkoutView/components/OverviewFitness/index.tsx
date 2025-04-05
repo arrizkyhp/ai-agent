@@ -30,7 +30,7 @@ const OverviewFitness = (props: OverviewFitnessProps) => {
                 Program Focus
               </span>
             </h4>
-            <div className="space-y-3">
+            <div className="space-y-3 pl-3">
               {args.programFocus.map((item, index) => (
                 <div
                   // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
@@ -54,7 +54,7 @@ const OverviewFitness = (props: OverviewFitnessProps) => {
                 Program Structure
               </span>
             </h4>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 pl-3">
               {args.programStructure.map((item, index) => (
                 <div
                   // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
@@ -81,7 +81,7 @@ const OverviewFitness = (props: OverviewFitnessProps) => {
                   </h4>
                   <p className="text-sm text-neutral-500 mb-4">{item.description}</p>
                   {item.examples && item.examples.length > 0 && (
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-4 pl-3">
                       {item.examples.map((itemExample, indexExample) => (
                         <div
                           // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
@@ -125,7 +125,7 @@ const OverviewFitness = (props: OverviewFitnessProps) => {
                 Additional Notes
               </span>
             </h4>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 pl-3">
               {args.additionalNotes.map((item, index) => (
                 <div
                   // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
