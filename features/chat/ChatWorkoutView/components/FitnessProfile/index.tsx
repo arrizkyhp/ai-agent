@@ -1,7 +1,7 @@
-import { Card } from '@/components/ui/card';
-import { BookOpenCheck, Building, HeartPulse, Target, UserCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { FitnessProfileProps } from '@/types/fitnessProfile';
+import { Card } from '@/components/ui/card';
+import type { FitnessProfileProps } from '@/types/fitnessProfile';
+import { BookOpenCheck, Building, HeartPulse, Target, UserCircle } from 'lucide-react';
 
 interface FitnessProfileComponentProps {
   args: FitnessProfileProps;
@@ -12,11 +12,7 @@ const FitnessProfile = (props: FitnessProfileComponentProps) => {
 
   return (
     <>
-      {args.introduction && (
-        <div className="mb-2 ">
-          {args.introduction}
-        </div>
-      )}
+      {args.introduction && <div className="mb-2 ">{args.introduction}</div>}
       <Card className="w-full mx-auto mb-4">
         <div className="p-4 space-y-2">
           <div className="flex justify-between items-center">
@@ -27,13 +23,12 @@ const FitnessProfile = (props: FitnessProfileComponentProps) => {
             <Badge variant="outline" className="capitalize rounded-full bg-primary/10">
               {args.fitnessLevel}
             </Badge>
-
           </div>
 
           {/* Personal Information Section */}
           <div className="bg-secondary/20 rounded-lg p-4 mb-4">
             <h4 className="flex items-center font-medium  mb-3">
-              <UserCircle className="h-4 w-4 mr-2 text-primary"/>
+              <UserCircle className="h-4 w-4 mr-2 text-primary" />
               Personal Information
             </h4>
             <div className="grid grid-cols-2 gap-x-4 gap-y-3">
@@ -64,7 +59,12 @@ const FitnessProfile = (props: FitnessProfileComponentProps) => {
                 <span className="text-sm font-medium text-foreground">Fitness Goal</span>
               </div>
               <div className="mt-auto">
-                <Badge variant="outline" className="bg-primary/20 rounded-full text-primary border-primary/30">{args.fitnessGoal}</Badge>
+                <Badge
+                  variant="outline"
+                  className="bg-primary/20 rounded-full text-primary border-primary/30"
+                >
+                  {args.fitnessGoal}
+                </Badge>
               </div>
             </div>
             <div className="bg-secondary/30 rounded-lg p-3 flex flex-col">
@@ -73,7 +73,10 @@ const FitnessProfile = (props: FitnessProfileComponentProps) => {
                 <span className="text-sm font-medium text-foreground">Workout Preference</span>
               </div>
               <div className="mt-auto">
-                <Badge variant="secondary" className="bg-secondary capitalize text-foreground border-secondary/50">
+                <Badge
+                  variant="secondary"
+                  className="bg-secondary capitalize text-foreground border-secondary/50"
+                >
                   {args.workoutAccess}
                 </Badge>
               </div>
@@ -84,7 +87,10 @@ const FitnessProfile = (props: FitnessProfileComponentProps) => {
                 <span className="text-sm font-medium text-foreground">Physical Capacity</span>
               </div>
               <div className="mt-auto">
-                <Badge variant="secondary" className="bg-secondary capitalize text-foreground border-secondary/50">
+                <Badge
+                  variant="secondary"
+                  className="bg-secondary capitalize text-foreground border-secondary/50"
+                >
                   {args.healthAndPhysicalCapacity}
                 </Badge>
               </div>
@@ -92,13 +98,9 @@ const FitnessProfile = (props: FitnessProfileComponentProps) => {
           </div>
         </div>
       </Card>
-      {args.message && (
-        <div className="mt-2 ">
-          {args.message}
-        </div>
-      )}
+      {args.message && <div className="mt-2 ">{args.message}</div>}
     </>
-  )
-}
+  );
+};
 
 export default FitnessProfile;

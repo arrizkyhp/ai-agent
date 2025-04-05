@@ -1,19 +1,22 @@
-import { Input } from "@/components/ui/input";
-import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Control } from "react-hook-form";
-import { FitnessFormValues } from "@/features/chat/types/fitnessOnBoardingType";
+import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import type { FitnessFormValues } from '@/features/chat/types/fitnessOnBoardingType';
+import type { Control } from 'react-hook-form';
 
 interface OnBoardingDetailsStepProps {
   control: Control<FitnessFormValues>;
   userName: string;
 }
 
-const OnBoardingDetailsStep = ({
-  control,
-  userName,
-}: OnBoardingDetailsStepProps) => {
+const OnBoardingDetailsStep = ({ control, userName }: OnBoardingDetailsStepProps) => {
   return (
     <>
       <CardHeader>
@@ -22,19 +25,14 @@ const OnBoardingDetailsStep = ({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div
-          className="space-y-4"
-        >
+        <div className="space-y-4">
           <FormField
             control={control}
             name="fitnessLevel"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Fitness Level</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                >
+                <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select your fitness level" />
@@ -57,26 +55,17 @@ const OnBoardingDetailsStep = ({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Fitness Goal</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                >
+                <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select your fitness goal" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="Building Muscle">
-                      Building Muscle
-                    </SelectItem>
+                    <SelectItem value="Building Muscle">Building Muscle</SelectItem>
                     <SelectItem value="Losing Fat">Losing Fat</SelectItem>
-                    <SelectItem value="Improve endurance">
-                      Improve Endurance
-                    </SelectItem>
-                    <SelectItem value="General Fitness">
-                      General Fitness
-                    </SelectItem>
+                    <SelectItem value="Improve endurance">Improve Endurance</SelectItem>
+                    <SelectItem value="General Fitness">General Fitness</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -91,10 +80,7 @@ const OnBoardingDetailsStep = ({
               <FormItem>
                 <FormLabel>Physical Limitations</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="Any injuries or limitations?"
-                  />
+                  <Input {...field} placeholder="Any injuries or limitations?" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -107,10 +93,7 @@ const OnBoardingDetailsStep = ({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Workout Preference</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                >
+                <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Where do you prefer to workout?" />
@@ -126,8 +109,6 @@ const OnBoardingDetailsStep = ({
               </FormItem>
             )}
           />
-
-
         </div>
       </CardContent>
     </>

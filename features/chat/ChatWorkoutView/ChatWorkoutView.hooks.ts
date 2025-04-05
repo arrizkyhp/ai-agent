@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import type { FitnessFormValues } from '@/features/chat/types/fitnessOnBoardingType';
 import { useChat } from '@ai-sdk/react';
-import { FitnessFormValues } from '@/features/chat/types/fitnessOnBoardingType';
+import { useEffect, useRef, useState } from 'react';
 
 const useChatWorkoutView = () => {
   const [isOnboarded, setIsOnboarded] = useState(false);
-  const [isWaitingForInitialResponse, setIsWaitingForInitialResponse] =
-    useState(false);
+  const [isWaitingForInitialResponse, setIsWaitingForInitialResponse] = useState(false);
   const [shouldSubmitOnboarding, setShouldSubmitOnboarding] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const newMessageRef = useRef<HTMLDivElement>(null);
@@ -15,6 +14,7 @@ const useChatWorkoutView = () => {
   });
 
   // Add this effect to scroll to the latest user message
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (newMessageRef.current) {
       // Get the current scroll position
@@ -29,7 +29,7 @@ const useChatWorkoutView = () => {
         // Scroll with offset
         window.scrollBy({
           top: offsetPosition,
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
       }
     }
@@ -44,7 +44,7 @@ const useChatWorkoutView = () => {
 
   // Clear the "waiting" flag when *any* assistant message appears
   useEffect(() => {
-    if (messages.some((message) => message.role === "assistant")) {
+    if (messages.some((message) => message.role === 'assistant')) {
       setIsWaitingForInitialResponse(false);
     }
   }, [messages]);
@@ -57,9 +57,7 @@ const useChatWorkoutView = () => {
     setIsOnboarded(true);
     setIsWaitingForInitialResponse(true);
     setShouldSubmitOnboarding(true);
-
   };
-
 
   return {
     handleInputChange,
@@ -72,7 +70,7 @@ const useChatWorkoutView = () => {
     messages,
     newMessageRef,
     status,
-  }
-}
+  };
+};
 
 export default useChatWorkoutView;

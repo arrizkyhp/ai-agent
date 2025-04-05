@@ -1,28 +1,32 @@
-import { Input } from "@/components/ui/input";
-import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Control } from "react-hook-form";
-import { FitnessFormValues } from "@/features/chat/types/fitnessOnBoardingType";
+import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import type { FitnessFormValues } from '@/features/chat/types/fitnessOnBoardingType';
 import { AnimatePresence } from 'motion/react';
+import type { Control } from 'react-hook-form';
 
 interface OnBoardingPersonalInfoProps {
   control: Control<FitnessFormValues>;
 }
 
-const OnBoardingPersonalInfo = ({
-  control,
-}: OnBoardingPersonalInfoProps) => {
+const OnBoardingPersonalInfo = ({ control }: OnBoardingPersonalInfoProps) => {
   return (
     <>
       <CardHeader>
-        <CardTitle className="text-2xl">Welcome! <br /> Tell us about yourself.</CardTitle>
+        <CardTitle className="text-2xl">
+          Welcome! <br /> Tell us about yourself.
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <AnimatePresence>
-          <div
-            className="space-y-4"
-          >
+          <div className="space-y-4">
             <FormField
               control={control}
               name="name"
@@ -44,11 +48,7 @@ const OnBoardingPersonalInfo = ({
                 <FormItem>
                   <FormLabel>Age</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      {...field}
-                      placeholder="Enter your age"
-                    />
+                    <Input type="number" {...field} placeholder="Enter your age" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -61,10 +61,7 @@ const OnBoardingPersonalInfo = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Gender</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select your gender" />
@@ -88,11 +85,7 @@ const OnBoardingPersonalInfo = ({
                 <FormItem>
                   <FormLabel>Weight (kg)</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      {...field}
-                      placeholder="Enter your weight in kg"
-                    />
+                    <Input type="number" {...field} placeholder="Enter your weight in kg" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

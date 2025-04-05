@@ -1,9 +1,9 @@
 import { Card } from '@/components/ui/card';
+import type { WorkoutProgramOverviewProps } from '@/types/workoutProgramOverview';
 import { Calendar, Dumbbell, Info, Target } from 'lucide-react';
-import { WorkoutProgramOverviewProps } from '@/types/workoutProgramOverview';
 
 interface OverviewFitnessProps {
-  args: WorkoutProgramOverviewProps
+  args: WorkoutProgramOverviewProps;
 }
 
 const OverviewFitness = (props: OverviewFitnessProps) => {
@@ -11,9 +11,7 @@ const OverviewFitness = (props: OverviewFitnessProps) => {
 
   return (
     <div>
-      <p className="mb-4 ">
-        {args.opening}
-      </p>
+      <p className="mb-4 ">{args.opening}</p>
       <Card>
         <div className="flex flex-col p-4 ">
           <div className="flex items-center gap-2 mb-4">
@@ -21,25 +19,27 @@ const OverviewFitness = (props: OverviewFitnessProps) => {
             <h3 className="font-semibold text-xl">Workout Program Overview</h3>
           </div>
           <div className="p-3 mb-2 mt-0">
-            <p className="text-base ">
-              {args.overview}
-            </p>
+            <p className="text-base ">{args.overview}</p>
           </div>
 
           {/* Program Focus Section */}
           <div className="mb-5">
             <h4 className="font-medium mb-3 pb-1 border-b border-border text-foreground">
               <span className="flex items-center">
-                    <Target className="h-4 w-4 mr-2 text-primary" />
-                    Program Focus
+                <Target className="h-4 w-4 mr-2 text-primary" />
+                Program Focus
               </span>
             </h4>
-            <div className="space-y-3 pl-2">
+            <div className="space-y-3">
               {args.programFocus.map((item, index) => (
-                <div key={index} className="flex items-start gap-2">
+                <div
+                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                  key={index}
+                  className="flex items-start gap-2 p-3 rounded-lg  border border-gray-300"
+                >
                   <div>
                     <p className="font-medium text-base text-foreground">{item.title}</p>
-                    <p className="text-sm text-muted-foreground">{item.description}</p>
+                    <p className="text-sm text-neutral-500">{item.description}</p>
                   </div>
                 </div>
               ))}
@@ -49,17 +49,21 @@ const OverviewFitness = (props: OverviewFitnessProps) => {
           {/* Program Structure Section */}
           <div className="mb-5">
             <h4 className="font-medium mb-3 pb-1 border-b border-border text-foreground">
-                <span className="flex items-center">
-                      <Calendar className="h-4 w-4 mr-2 text-primary" />
-                      Program Structure
-                </span>
+              <span className="flex items-center">
+                <Calendar className="h-4 w-4 mr-2 text-primary" />
+                Program Structure
+              </span>
             </h4>
-            <div className="grid grid-cols-2 gap-4 pl-2">
+            <div className="grid grid-cols-2 gap-4">
               {args.programStructure.map((item, index) => (
-                <div key={index} className="flex items-start gap-2">
+                <div
+                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                  key={index}
+                  className="flex items-start gap-2 p-3 rounded-lg  border border-gray-300"
+                >
                   <div>
                     <p className="font-medium text-base text-foreground">{item.title}</p>
-                    <p className="text-sm text-muted-foreground">{item.description}</p>
+                    <p className="text-sm text-neutral-500">{item.description}</p>
                   </div>
                 </div>
               ))}
@@ -69,34 +73,41 @@ const OverviewFitness = (props: OverviewFitnessProps) => {
           {/* Other Program */}
           <div className="mb-5 flex flex-col gap-5">
             {args.otherProgram.map((item, index) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
               <div key={index} className="flex items-start gap-2 w-full">
                 <div className="flex flex-col w-full">
                   <h4 className="font-medium mb-3 pb-1 border-b border-border text-foreground">
-                    <span className="flex items-center">
-                        {item.title}
-                    </span>
+                    <span className="flex items-center">{item.title}</span>
                   </h4>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    {item.description}
-                  </p>
+                  <p className="text-sm text-neutral-500 mb-4">{item.description}</p>
                   {item.examples && item.examples.length > 0 && (
-                    <div className="flex flex-col gap-4 ">
+                    <div className="flex flex-col gap-4">
                       {item.examples.map((itemExample, indexExample) => (
-                        <div key={indexExample} className="bg-gray-100 p-3 rounded-lg border border-gray-200">
+                        <div
+                          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                          key={indexExample}
+                          className="p-3 rounded-lg border border-gray-300"
+                        >
                           <h5 className="text-base font-medium">{itemExample.title}</h5>
-                          <p className="text-sm text-muted-foreground"> {itemExample.description}</p>
-                            {itemExample.list && itemExample.list.length > 0 && (
-                              <ul className="flex flex-col gap-2 list-disc list-outside mt-3">
-                                {
-                                  itemExample.list.map((itemListExample, indexListExample) => (
-                                    <li key={indexListExample} className="flex flex-col items-start gap-1 p-3  bg-gray-300/40 rounded-lg  border border-gray-300">
-                                      <p className="font-medium text-sm text-foreground">{itemListExample.title}</p>
-                                      <p className="text-sm text-muted-foreground">{itemListExample.description}</p>
-                                    </li>
-                                  ))
-                                }
-                              </ul>
-                            )}
+                          <p className="text-sm text-neutral-500">{itemExample.description}</p>
+                          {itemExample.list && itemExample.list.length > 0 && (
+                            <ul className="flex flex-col gap-2 list-disc list-outside mt-4">
+                              {itemExample.list.map((itemListExample, indexListExample) => (
+                                <li
+                                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                                  key={indexListExample}
+                                  className="flex flex-col items-start gap-1 p-3 rounded-lg  border border-gray-300"
+                                >
+                                  <p className="font-medium text-sm text-foreground">
+                                    {itemListExample.title}
+                                  </p>
+                                  <p className="text-sm text-neutral-500">
+                                    {itemListExample.description}
+                                  </p>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -108,18 +119,22 @@ const OverviewFitness = (props: OverviewFitnessProps) => {
 
           {/* Additional Notes Section */}
           <div className="mb-5">
-            <h4 className="font-medium mb-2 pb-1 border-b border-border text-foreground">
+            <h4 className="font-medium mb-4 pb-1 border-b border-border text-foreground">
               <span className="flex items-center">
                 <Info className="h-4 w-4 mr-2 text-primary" />
                 Additional Notes
               </span>
             </h4>
-            <div className="flex flex-col gap-3 p-3">
+            <div className="flex flex-col gap-3">
               {args.additionalNotes.map((item, index) => (
-                <div key={index} className="flex items-start gap-2">
+                <div
+                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                  key={index}
+                  className="flex items-start gap-2 p-3 rounded-lg  border border-gray-300"
+                >
                   <div>
                     <p className="font-medium text-base text-foreground">{item.title}</p>
-                    <p className="text-sm text-muted-foreground">{item.description}</p>
+                    <p className="text-sm text-neutral-500">{item.description}</p>
                   </div>
                 </div>
               ))}
@@ -128,12 +143,9 @@ const OverviewFitness = (props: OverviewFitnessProps) => {
         </div>
       </Card>
 
-      <p className="my-4 ">
-        {args.messages}
-      </p>
-
+      <p className="my-4 ">{args.messages}</p>
     </div>
-  )
-}
+  );
+};
 
 export default OverviewFitness;

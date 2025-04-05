@@ -1,22 +1,22 @@
-import {FormEvent, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { zodResolver } from '@hookform/resolvers/zod';
+import type { StepperStep } from '@/features/chat/components/types/stepperStep';
+import { INITIAL_ON_BOARDING_FORM_DATA } from '@/features/chat/constants/fitnessOnBoard';
 import {
+  type FitnessFormValues,
   fitnessFormSchema,
-  FitnessFormValues
-} from "@/features/chat/types/fitnessOnBoardingType";
-import { INITIAL_ON_BOARDING_FORM_DATA } from "@/features/chat/constants/fitnessOnBoard";
-import {StepperStep} from "@/features/chat/components/types/stepperStep";
+} from '@/features/chat/types/fitnessOnBoardingType';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { type FormEvent, useState } from 'react';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 
 const useFitnessOnBoardingForm = (onSubmit: (data: FitnessFormValues) => void) => {
-  const [step, setStep] = useState<StepperStep>("name");
+  const [step, setStep] = useState<StepperStep>('name');
   const [direction, setDirection] = useState(0);
 
   // Initialize form with React Hook Form and Zod validation
   const methods = useForm<FitnessFormValues>({
     resolver: zodResolver(fitnessFormSchema),
     defaultValues: INITIAL_ON_BOARDING_FORM_DATA,
-    mode: "onChange"
+    mode: 'onChange',
   });
 
   const {
@@ -24,16 +24,16 @@ const useFitnessOnBoardingForm = (onSubmit: (data: FitnessFormValues) => void) =
     handleSubmit,
     trigger,
     getValues,
-    formState: { errors }
+    formState: { errors },
   } = methods;
 
   const handlePersonalInfoSubmit = async (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setDirection(1);
     // Validate only the personal info fields
-    const result = await trigger(["name", "age", "gender", "weight"]);
+    const result = await trigger(['name', 'age', 'gender', 'weight']);
     if (result) {
-      setStep("details");
+      setStep('details');
     }
   };
 
@@ -43,21 +43,21 @@ const useFitnessOnBoardingForm = (onSubmit: (data: FitnessFormValues) => void) =
     // Validate all fields
     const result = await trigger();
     if (result) {
-      setStep("overview");
+      setStep('overview');
     }
   };
 
   const handleFinalSubmit: SubmitHandler<FitnessFormValues> = (data) => {
-    let workoutLocation = "";
+    let workoutLocation = '';
 
-    if (data.workoutAccess === "Home") {
-      workoutLocation = "home";
-    } else if (data.workoutAccess === "Gym") {
-      workoutLocation = "the gym";
-    } else if (data.workoutAccess === "home & gym") {
-      workoutLocation = "both home and the gym";
+    if (data.workoutAccess === 'Home') {
+      workoutLocation = 'home';
+    } else if (data.workoutAccess === 'Gym') {
+      workoutLocation = 'the gym';
+    } else if (data.workoutAccess === 'home & gym') {
+      workoutLocation = 'both home and the gym';
     } else {
-      workoutLocation = "an unspecified location"; // Handle unexpected values
+      workoutLocation = 'an unspecified location'; // Handle unexpected values
     }
 
     const formattedData = {
@@ -71,7 +71,7 @@ const useFitnessOnBoardingForm = (onSubmit: (data: FitnessFormValues) => void) =
       }. I prefer working out at ${workoutLocation}. ${
         data.healthAndPhysicalCapacity
           ? `I have the following health and physical considerations: ${data.healthAndPhysicalCapacity}.`
-          : "I have no known health or physical limitations."
+          : 'I have no known health or physical limitations.'
       }`,
     };
 
@@ -81,11 +81,11 @@ const useFitnessOnBoardingForm = (onSubmit: (data: FitnessFormValues) => void) =
   // Navigation handlers
   const goToPersonalInfo = () => {
     setDirection(-1);
-    setStep("name")
+    setStep('name');
   };
   const goToDetails = () => {
     setDirection(-1);
-    setStep("details")
+    setStep('details');
   };
 
   return {
@@ -100,7 +100,7 @@ const useFitnessOnBoardingForm = (onSubmit: (data: FitnessFormValues) => void) =
     handleDetailsSubmit,
     handleFinalSubmit,
     goToPersonalInfo,
-    goToDetails
+    goToDetails,
   };
 };
 
