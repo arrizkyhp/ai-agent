@@ -5,9 +5,11 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
+import ChatSuggestions from '@/features/chat/ChatWorkoutView/components/ChatSuggestions';
 import FullProgramFitness from '@/features/chat/ChatWorkoutView/components/FullProgramFitness';
 import type { ToolInvocation } from 'ai';
 import { ArrowUp } from 'lucide-react';
+import type { ChangeEvent } from 'react';
 import FitnessOnboardingForm from '../components/FitnessOnboardingForm/FitnessOnboardingForm';
 import useChatWorkoutView from './ChatWorkoutView.hooks';
 import FitnessProfile from './components/FitnessProfile';
@@ -138,9 +140,16 @@ const ChatWorkoutView = () => {
           )}
       </div>
 
-      {/* !TODO: ADD Suggestion chat if fitness Profile introduction appears */}
-
       <div className="sticky bottom-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-4 border-t">
+        <ChatSuggestions
+          messages={messages}
+          onSelectSuggestion={(suggestion) => {
+            const syntheticEvent = {
+              target: { value: suggestion },
+            } as ChangeEvent<HTMLTextAreaElement>;
+            handleInputChange(syntheticEvent);
+          }}
+        />
         <form onSubmit={handleSubmit} className="flex gap-2">
           <Card className="flex-1 p-1 rounded-lg border">
             <Textarea
