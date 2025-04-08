@@ -43,11 +43,11 @@ const useChatWorkoutView = () => {
   }, [isOnboarded, handleSubmit, shouldSubmitOnboarding]);
 
   // Clear the "waiting" flag when *any* assistant message appears
-  useEffect(() => {
-    if (messages.some((message) => message.role === 'assistant')) {
-      setIsWaitingForInitialResponse(false);
-    }
-  }, [messages]);
+  // useEffect(() => {
+  //   if (messages.some((message) => message.role === 'assistant')) {
+  //     setIsWaitingForInitialResponse(false);
+  //   }
+  // }, [messages]);
 
   const handleOnboardingSubmit = (formData: FitnessFormValues) => {
     const { message = '' } = formData || {};

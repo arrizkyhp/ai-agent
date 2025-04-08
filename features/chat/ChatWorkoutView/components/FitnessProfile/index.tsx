@@ -1,9 +1,9 @@
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import ToolsLoader from '@/features/chat/components/ToolsLoader';
 import type { FitnessProfileProps } from '@/types/fitnessProfile';
-import { BookOpenCheck, Building, HeartPulse, Loader2, Target, UserCircle } from 'lucide-react';
+import { BookOpenCheck, Building, HeartPulse, Target, UserCircle } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
-import { useEffect, useState } from 'react';
 
 interface FitnessProfileComponentProps {
   args: FitnessProfileProps;
@@ -14,61 +14,11 @@ const FitnessProfile = (props: FitnessProfileComponentProps) => {
   const { args, state } = props;
   const isLoading = state === 'partial-call' || state === 'call';
 
-  const [currentMessage, setCurrentMessage] = useState(0);
-
-  const loadingMessages = [
-    'Gathering your fitness data...',
-    'Analyzing your profile...',
-    'Designing your personalized program...',
-    'Analyzing fitness data...',
-    'Customizing your workout plan...',
-    'Calculating optimal exercises...',
-    'Designing your fitness journey...',
-    'Preparing personalized recommendations...',
-    'Optimizing for your fitness goals...',
-  ];
-
-  // Simulate loading with random messages
-  useEffect(() => {
-    if (!isLoading) return; // Only run when loading
-
-    // Change message randomly every 1.5 seconds
-    const messageInterval = setInterval(() => {
-      setCurrentMessage((prevMessage) => {
-        // Use functional update to avoid any dependency issues
-        const randomIndex = Math.floor(Math.random() * loadingMessages.length);
-        return randomIndex;
-      });
-    }, 1500);
-
-    return () => {
-      clearInterval(messageInterval);
-    };
-  }, [isLoading]);
-
   return (
     <>
       <AnimatePresence mode="wait">
         {isLoading ? (
-          <motion.div
-            key="loading"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="flex items-center gap-2 bg-gray-50 p-3 rounded-lg border border-gray-100 shadow-sm mb-4"
-          >
-            <Loader2 className="h-5 w-5 animate-spin text-emerald-500" />
-            <motion.span
-              key={currentMessage}
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -5 }}
-              transition={{ duration: 0.2 }}
-              className="font-medium"
-            >
-              {loadingMessages[currentMessage]}
-            </motion.span>
-          </motion.div>
+          <ToolsLoader isLoading={isLoading} />
         ) : (
           <motion.div
             key="greeting"

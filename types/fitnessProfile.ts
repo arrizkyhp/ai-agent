@@ -19,7 +19,7 @@ export const fitnessProfileSchema = z.object({
   introduction: z
     .string()
     .describe(
-      'Warm greetings or Introduction about yourself to user, you are AI Assistant fitness that will help user, add this only at the first tool call',
+      'Warm greetings or Introduction about yourself to user, you are AI Assistant fitness that will help user, add this only at the first tool call, dont add if its update ',
     )
     .optional(),
   message: z

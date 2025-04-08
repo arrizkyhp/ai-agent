@@ -11,7 +11,6 @@ import { ArrowUp } from 'lucide-react';
 import FitnessOnboardingForm from '../components/FitnessOnboardingForm/FitnessOnboardingForm';
 import useChatWorkoutView from './ChatWorkoutView.hooks';
 import FitnessProfile from './components/FitnessProfile';
-import InitialLoaderMessage from './components/InitialLoaderMessage';
 import OverviewFitness from './components/OverviewFitness';
 import ThinkingMessage from './components/ThinkingMessage';
 
@@ -41,8 +40,8 @@ const ChatWorkoutView = () => {
       return <FitnessProfile args={args} state={state} />;
     }
 
-    if (toolName === 'workoutProgramOverview' && state === 'result') {
-      return <OverviewFitness args={args} />;
+    if (toolName === 'workoutProgramOverview') {
+      return <OverviewFitness args={args} state={state} />;
     }
 
     if (toolName === 'workoutProgramFull' && state === 'result') {
@@ -129,16 +128,8 @@ const ChatWorkoutView = () => {
           );
         })}
 
-        {/* Initial AI response loader */}
-        {isWaitingForInitialResponse && (
-          <div className="min-h-[calc(100vh-200px)]">
-            <InitialLoaderMessage />
-          </div>
-        )}
-
         {/* General "thinking" message loader */}
-        {!isWaitingForInitialResponse &&
-          status === 'submitted' &&
+        {status === 'submitted' &&
           messages.length > 0 &&
           messages[messages.length - 1].role === 'user' && (
             <div className="min-h-[calc(100vh-200px)]">
@@ -168,18 +159,11 @@ const ChatWorkoutView = () => {
               }}
               placeholder="Type your message..."
               className="min-h-[40px] max-h-[200px] border-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none"
-              disabled={isWaitingForInitialResponse}
             />
           </Card>
 
           {/* !TODO: Make text area grow to top like T3 or Claude */}
-          <Button
-            id="chat-submit-button"
-            type="submit"
-            size="icon"
-            className="rounded-lg"
-            disabled={isWaitingForInitialResponse}
-          >
+          <Button id="chat-submit-button" type="submit" size="icon" className="rounded-lg">
             <ArrowUp className="h-4 w-4" />
           </Button>
         </form>
