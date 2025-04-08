@@ -1,8 +1,10 @@
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import ToolsLoader from '@/features/chat/components/ToolsLoader';
 import type { WorkoutProgramOverviewProps } from '@/types/workoutProgramOverview';
-import { Calendar, Dumbbell, Info, Target } from 'lucide-react';
+import { Calendar, Dumbbell, Info, Target, Youtube } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 
 interface OverviewFitnessProps {
@@ -178,14 +180,40 @@ const OverviewFitness = (props: OverviewFitnessProps) => {
                                         <li
                                           // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                                           key={indexListExample}
-                                          className="flex flex-col items-start gap-1 p-3 rounded-lg  border border-gray-300"
+                                          className="flex justify-between items-start gap-1 p-3 rounded-lg  border border-gray-300"
                                         >
-                                          <p className="font-medium text-sm text-foreground">
-                                            {itemListExample.title}
-                                          </p>
-                                          <p className="text-sm text-neutral-500">
-                                            {itemListExample.description}
-                                          </p>
+                                          <div className="flex flex-col gap-1">
+                                            <p className="font-medium text-sm text-foreground">
+                                              {itemListExample.title}
+                                            </p>
+                                            <p className="text-sm text-neutral-500">
+                                              {itemListExample.description}
+                                            </p>
+                                          </div>
+
+                                          <TooltipProvider>
+                                            <Tooltip>
+                                              <TooltipTrigger asChild>
+                                                <Button
+                                                  variant="ghost"
+                                                  size="sm"
+                                                  className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
+                                                  onClick={() =>
+                                                    window.open(itemListExample.urlLink, '_blank')
+                                                  }
+                                                >
+                                                  <Youtube className="h-4 w-4" />
+                                                  <span>Watch Tutorial</span>
+                                                </Button>
+                                              </TooltipTrigger>
+                                              <TooltipContent>
+                                                <p>
+                                                  Don't know how to do this exercise? <br /> Watch a
+                                                  tutorial!
+                                                </p>
+                                              </TooltipContent>
+                                            </Tooltip>
+                                          </TooltipProvider>
                                         </li>
                                       ))}
                                     </ul>

@@ -38,6 +38,12 @@ export const workoutProgramOverviewSchema = z.object({
                 .array(
                   z.object({
                     title: z.string().describe('title of list example of other program'),
+                    urlLink: z
+                      .string()
+                      .url()
+                      .describe(
+                        'url link of list example of other program, this can be youtube link',
+                      ),
                     description: z
                       .string()
                       .describe('description of list example of other program'),
