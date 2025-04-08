@@ -2,11 +2,13 @@
 
 import { MemoizedMarkdown } from '@/components/memoized-markdown';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
+import FullProgramFitness from '@/features/chat/ChatWorkoutView/components/FullProgramFitness';
 import type { ToolInvocation } from 'ai';
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp, Calendar, Dumbbell, Info, Target, Timer } from 'lucide-react';
 import FitnessOnboardingForm from '../components/FitnessOnboardingForm/FitnessOnboardingForm';
 import useChatWorkoutView from './ChatWorkoutView.hooks';
 import FitnessProfile from './components/FitnessProfile';
@@ -43,6 +45,10 @@ const ChatWorkoutView = () => {
     if (toolName === 'workoutProgramOverview' && state === 'result') {
       return <OverviewFitness args={args} />;
     }
+
+    if (toolName === 'workoutProgramFull' && state === 'result') {
+      return <FullProgramFitness args={args} />;
+    }
     return null;
   };
 
@@ -78,11 +84,12 @@ const ChatWorkoutView = () => {
             );
 
           return (
-            <div
+            <article
               className={`flex gap-2 ${
                 message.role === 'user' && 'flex-row-reverse'
               } ${isLastElement ? 'min-h-[calc(100vh-200px)]' : ''}`}
               key={message.id}
+              id={message.id}
               ref={message.role === 'user' && index === messages.length - 1 ? newMessageRef : null}
             >
               {message.role === 'user' && (
@@ -119,7 +126,7 @@ const ChatWorkoutView = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </article>
           );
         })}
 
