@@ -102,3 +102,43 @@ body {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+/* Left edge feathered blur layers */
+.left-blur-layer {
+  position: absolute;
+  top: 0;
+  left: -25px;
+  height: 100%;
+  width: 60px; /* adjust width */
+  pointer-events: none;
+  mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1),
+    rgba(0, 0, 0, 0)
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1),
+    rgba(0, 0, 0, 0)
+  );
+}
+
+/* Right edge feathered blur layers */
+.right-blur-layer {
+  position: absolute;
+  top: 0;
+  right: -25px;
+  height: 100%;
+  width: 60px; /* adjust width */
+  pointer-events: none;
+  mask-image: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 1),
+    rgba(0, 0, 0, 0)
+  );
+  -webkit-mask-image: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 1),
+    rgba(0, 0, 0, 0)
+  );
+}

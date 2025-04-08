@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import type { Message } from 'ai';
 import { motion } from 'motion/react';
-import { useMemo } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 interface ChatSuggestionsProps {
   messages: Message[];
@@ -9,29 +9,94 @@ interface ChatSuggestionsProps {
 }
 
 const ChatSuggestions = ({ messages, onSelectSuggestion }: ChatSuggestionsProps) => {
-  // Use memoization to avoid recalculating on every render
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
   const suggestions = useMemo(() => {
     return getSuggestionsByConversationState(messages);
   }, [messages]);
 
-  // Don't render anything if no suggestions are available
   if (suggestions.length === 0) {
     return null;
   }
 
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!containerRef.current) return;
+    setIsDragging(true);
+    setStartX(e.pageX - containerRef.current.offsetLeft);
+    setScrollLeft(containerRef.current.scrollLeft);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !containerRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - containerRef.current.offsetLeft;
+    const walk = (x - startX) * 1; // scroll speed factor
+    containerRef.current.scrollLeft = scrollLeft - walk;
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
+
   return (
-    <motion.div className="flex gap-2 mb-4 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing">
-      {suggestions.map((suggestion: string) => (
-        <Button
-          key={suggestion}
-          variant="outline"
-          size="sm"
-          onClick={() => onSelectSuggestion(suggestion)}
-        >
-          {suggestion}
-        </Button>
+    <div className="relative">
+      <motion.div
+        ref={containerRef}
+        className="flex gap-2 px-2 mb-4 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
+      >
+        {suggestions.map((suggestion: string) => (
+          <Button
+            key={suggestion}
+            variant="outline"
+            size="sm"
+            onClick={() => onSelectSuggestion(suggestion)}
+          >
+            {suggestion}
+          </Button>
+        ))}
+      </motion.div>
+      {/* LEFT feathered blur */}
+      {[0.5, 1, 2, 4, 8, 16].map((blur, idx) => (
+        <div
+          key={`left-blur-${
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+            idx
+          }`}
+          className="left-blur-layer"
+          style={{
+            zIndex: idx + 1,
+            backdropFilter: `blur(${blur}px)`,
+            WebkitBackdropFilter: `blur(${blur}px)`,
+          }}
+        />
       ))}
-    </motion.div>
+      {/* RIGHT feathered blur */}
+      {[0.5, 1, 2, 4, 8, 16].map((blur, idx) => (
+        <div
+          key={`right-blur-${
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+            idx
+          }`}
+          className="right-blur-layer"
+          style={{
+            zIndex: idx + 1,
+            backdropFilter: `blur(${blur}px)`,
+            WebkitBackdropFilter: `blur(${blur}px)`,
+          }}
+        />
+      ))}
+    </div>
   );
 };
 
