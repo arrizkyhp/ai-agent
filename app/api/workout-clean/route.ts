@@ -66,6 +66,7 @@ export async function POST(req: Request) {
       execute: (dataStream) => {
         const result = streamText({
           model: deepseek('deepseek-chat'),
+          toolCallStreaming: true,
           messages: contextMessages,
           system: `
                     You are a professional fitness coach and AI assistant specializing in creating personalized workout programs.

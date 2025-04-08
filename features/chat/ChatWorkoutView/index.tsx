@@ -2,13 +2,12 @@
 
 import { MemoizedMarkdown } from '@/components/memoized-markdown';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import FullProgramFitness from '@/features/chat/ChatWorkoutView/components/FullProgramFitness';
 import type { ToolInvocation } from 'ai';
-import { ArrowUp, Calendar, Dumbbell, Info, Target, Timer } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 import FitnessOnboardingForm from '../components/FitnessOnboardingForm/FitnessOnboardingForm';
 import useChatWorkoutView from './ChatWorkoutView.hooks';
 import FitnessProfile from './components/FitnessProfile';
@@ -38,8 +37,8 @@ const ChatWorkoutView = () => {
   const renderToolInfo = (toolInvocation: ToolInvocation) => {
     const { toolName, state, args } = toolInvocation;
 
-    if (toolName === 'showFitnessProfile' && state === 'result') {
-      return <FitnessProfile args={args} />;
+    if (toolName === 'showFitnessProfile') {
+      return <FitnessProfile args={args} state={state} />;
     }
 
     if (toolName === 'workoutProgramOverview' && state === 'result') {
