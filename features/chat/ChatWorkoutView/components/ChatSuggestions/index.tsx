@@ -102,7 +102,6 @@ const ChatSuggestions = ({ messages, onSelectSuggestion }: ChatSuggestionsProps)
 
 // Determine suggestions based on conversation state
 function getSuggestionsByConversationState(messages: Message[]): string[] {
-  console.log('Messages:', messages); // Debugging line to check messages
   // Check for different tool invocations in the conversation
   const hasFitnessProfile = checkForToolInvocation(messages, 'showFitnessProfile');
   const hasWorkoutOverview = checkForToolInvocation(messages, 'workoutProgramOverview');
@@ -158,7 +157,6 @@ function getSuggestionsByConversationState(messages: Message[]): string[] {
 
 // Helper function to check if a specific tool has been invoked
 function checkForToolInvocation(messages: Message[], toolName: string): boolean {
-  console.log('Checking for tool invocation:', messages); // Debugging line to check tool name
   return messages.some((msg) =>
     msg?.parts?.some(
       (part) =>

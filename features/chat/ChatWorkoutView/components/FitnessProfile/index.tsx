@@ -15,6 +15,8 @@ const FitnessProfile = (props: FitnessProfileComponentProps) => {
   const { args, state } = props;
   const isLoading = state === 'partial-call' || state === 'call';
 
+  console.log(args);
+
   return (
     <>
       <AnimatePresence mode="wait">
