@@ -19,15 +19,18 @@ const ChatTextArea = (props: ChatTextAreaProps) => {
 
   return (
     <div className="sticky bottom-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-4 border-t">
-      <ChatSuggestions
-        messages={messages}
-        onSelectSuggestion={(suggestion) => {
-          const syntheticEvent = {
-            target: { value: suggestion },
-          } as ChangeEvent<HTMLTextAreaElement>;
-          handleInputChange(syntheticEvent);
-        }}
-      />
+      {status === 'ready' && (
+        <ChatSuggestions
+          messages={messages}
+          onSelectSuggestion={(suggestion) => {
+            const syntheticEvent = {
+              target: { value: suggestion },
+            } as ChangeEvent<HTMLTextAreaElement>;
+            handleInputChange(syntheticEvent);
+          }}
+        />
+      )}
+
       <form onSubmit={handleSubmit} className="flex gap-2">
         <Card className="flex-1 p-1 rounded-lg border">
           <Textarea

@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import type { Message } from 'ai';
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import { useMemo, useRef, useState } from 'react';
 
 interface ChatSuggestionsProps {
@@ -46,57 +46,73 @@ const ChatSuggestions = ({ messages, onSelectSuggestion }: ChatSuggestionsProps)
   };
 
   return (
-    <div className="relative">
+    <AnimatePresence>
       <motion.div
-        ref={containerRef}
-        className="flex gap-2 px-2 mb-4 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing"
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
+        className="relative"
+        initial={{
+          opacity: 0,
+          y: 10,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        exit={{
+          opacity: 0,
+          y: 10,
+        }}
       >
-        {suggestions.map((suggestion: string) => (
-          <Button
-            key={suggestion}
-            variant="outline"
-            size="sm"
-            onClick={() => onSelectSuggestion(suggestion)}
-          >
-            {suggestion}
-          </Button>
+        <motion.div
+          ref={containerRef}
+          className="flex gap-2 px-2 mb-4 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+        >
+          {suggestions.map((suggestion: string) => (
+            <Button
+              key={suggestion}
+              variant="outline"
+              size="sm"
+              onClick={() => onSelectSuggestion(suggestion)}
+            >
+              {suggestion}
+            </Button>
+          ))}
+        </motion.div>
+        {/* LEFT feathered blur */}
+        {[0.5, 1, 2, 4, 8, 16].map((blur, idx) => (
+          <div
+            key={`left-blur-${
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+              idx
+            }`}
+            className="left-blur-layer"
+            style={{
+              zIndex: idx + 1,
+              backdropFilter: `blur(${blur}px)`,
+              WebkitBackdropFilter: `blur(${blur}px)`,
+            }}
+          />
+        ))}
+        {/* RIGHT feathered blur */}
+        {[0.5, 1, 2, 4, 8, 16].map((blur, idx) => (
+          <div
+            key={`right-blur-${
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+              idx
+            }`}
+            className="right-blur-layer"
+            style={{
+              zIndex: idx + 1,
+              backdropFilter: `blur(${blur}px)`,
+              WebkitBackdropFilter: `blur(${blur}px)`,
+            }}
+          />
         ))}
       </motion.div>
-      {/* LEFT feathered blur */}
-      {[0.5, 1, 2, 4, 8, 16].map((blur, idx) => (
-        <div
-          key={`left-blur-${
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            idx
-          }`}
-          className="left-blur-layer"
-          style={{
-            zIndex: idx + 1,
-            backdropFilter: `blur(${blur}px)`,
-            WebkitBackdropFilter: `blur(${blur}px)`,
-          }}
-        />
-      ))}
-      {/* RIGHT feathered blur */}
-      {[0.5, 1, 2, 4, 8, 16].map((blur, idx) => (
-        <div
-          key={`right-blur-${
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            idx
-          }`}
-          className="right-blur-layer"
-          style={{
-            zIndex: idx + 1,
-            backdropFilter: `blur(${blur}px)`,
-            WebkitBackdropFilter: `blur(${blur}px)`,
-          }}
-        />
-      ))}
-    </div>
+    </AnimatePresence>
   );
 };
 

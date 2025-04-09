@@ -14,6 +14,7 @@ interface ChatBubbleContainerProps {
   status: string;
   isWaitingForInitialResponse: boolean;
   isOnboarded: boolean;
+  showAllMessages: boolean;
 }
 
 const ChatBubbleContainer = (props: ChatBubbleContainerProps) => {
@@ -24,6 +25,7 @@ const ChatBubbleContainer = (props: ChatBubbleContainerProps) => {
     status,
     isWaitingForInitialResponse,
     isOnboarded,
+    showAllMessages,
   } = props;
 
   const renderToolInfo = (toolInvocation: ToolInvocation) => {
@@ -43,9 +45,13 @@ const ChatBubbleContainer = (props: ChatBubbleContainerProps) => {
     return null;
   };
 
+  const messagesToShow = showAllMessages
+    ? messages
+    : messages.slice(Math.max(messages.length - 2, 0));
+
   return (
     <div className="flex-1 overflow-auto p-4 space-y-4" ref={messagesContainerRef}>
-      {messages.map((message, index) => {
+      {messagesToShow.map((message, index) => {
         // Skip rendering the first user message after onboarding
         if (index === 0 && message.role === 'user' && isOnboarded) {
           return null;
@@ -53,12 +59,12 @@ const ChatBubbleContainer = (props: ChatBubbleContainerProps) => {
 
         // Check if this is the last message and there's no loader showing
         const isLastElement =
-          index === messages.length - 1 &&
+          index === messagesToShow.length - 1 &&
           !isWaitingForInitialResponse &&
           !(
             status === 'submitted' &&
-            messages.length > 0 &&
-            messages[messages.length - 1].role === 'user'
+            messagesToShow.length > 0 &&
+            messagesToShow[messagesToShow.length - 1].role === 'user'
           );
 
         return (
@@ -68,7 +74,9 @@ const ChatBubbleContainer = (props: ChatBubbleContainerProps) => {
             } ${isLastElement ? 'min-h-[calc(100vh-200px)]' : ''}`}
             key={message.id}
             id={message.id}
-            ref={message.role === 'user' && index === messages.length - 1 ? newMessageRef : null}
+            ref={
+              message.role === 'user' && index === messagesToShow.length - 1 ? newMessageRef : null
+            }
           >
             {message.role === 'user' && (
               <Avatar>
@@ -110,12 +118,19 @@ const ChatBubbleContainer = (props: ChatBubbleContainerProps) => {
 
       {/* General "thinking" message loader */}
       {status === 'submitted' &&
-        messages.length > 0 &&
-        messages[messages.length - 1].role === 'user' && (
+        messagesToShow.length > 0 &&
+        messagesToShow[messagesToShow.length - 1].role === 'user' && (
           <div className="min-h-[calc(100vh-200px)]">
             <ThinkingMessage />
           </div>
         )}
+
+      {/* REMOVE THIS BUTTON COMPLETELY - The button is now handled in the parent component*/}
+      {/* {messages.length > 2 && (
+        <button onClick={() => setShowAllMessages(!showAllMessages)}>
+          {showAllMessages ? 'View Last 2 Messages' : 'View Past Messages'}
+        </button>
+      )} */}
     </div>
   );
 };
