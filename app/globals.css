@@ -142,3 +142,8 @@ body {
     rgba(0, 0, 0, 0)
   );
 }
+
+.hide-marker {
+  list-style-type: none;
+  padding-left: 0; /* optional: remove indent */
+}
