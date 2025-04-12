@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import FitnessOnboardingForm from '../components/FitnessOnboardingForm/FitnessOnboardingForm';
 import useChatWorkoutView from './ChatWorkoutView.hooks';
 
@@ -16,6 +15,7 @@ import ChatTextArea from './components/ChatTextArea';
 
 const ChatWorkoutView = () => {
   const {
+    activeTab,
     handleInputChange,
     handleOnboardingSubmit,
     handleSubmit,
@@ -26,32 +26,11 @@ const ChatWorkoutView = () => {
     messages,
     newMessageRef,
     status,
+    showAllMessages,
+    scrollToTop,
+    setShowAllMessages,
+    setActiveTab,
   } = useChatWorkoutView();
-
-  console.log(status);
-
-  const [activeTab, setActiveTab] = useState<'chat' | 'profile'>('chat');
-  const [showAllMessages, setShowAllMessages] = useState(false);
-
-  useEffect(() => {
-    // Check if the last message contains a tool invocation
-    if (
-      messages.length > 0 &&
-      messages[messages.length - 1].parts.some((part) => part.type === 'tool-invocation')
-    ) {
-      setShowAllMessages(false); // Always show last 2 when a tool is called
-    }
-  }, [messages]);
-
-  // Function to scroll to top
-  const scrollToTop = () => {
-    if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTo({
-        top: 0,
-        behavior: 'smooth', // Optional: Adds a smooth scrolling animation
-      });
-    }
-  };
 
   if (!isOnboarded) {
     return (

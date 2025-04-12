@@ -199,7 +199,7 @@ const FitnessProfile = (props: FitnessProfileComponentProps) => {
             key="greeting"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.8 }}
+            transition={{ duration: 0.5 }}
             className="leading-relaxed mt-4"
           >
             {args.message}

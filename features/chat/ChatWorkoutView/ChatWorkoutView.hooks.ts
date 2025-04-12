@@ -6,6 +6,9 @@ const useChatWorkoutView = () => {
   const [isOnboarded, setIsOnboarded] = useState(false);
   const [isWaitingForInitialResponse, setIsWaitingForInitialResponse] = useState(false);
   const [shouldSubmitOnboarding, setShouldSubmitOnboarding] = useState(false);
+  const [activeTab, setActiveTab] = useState<'chat' | 'profile'>('chat');
+  const [showAllMessages, setShowAllMessages] = useState(false);
+
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const newMessageRef = useRef<HTMLDivElement>(null);
 
@@ -42,12 +45,15 @@ const useChatWorkoutView = () => {
     }
   }, [isOnboarded, handleSubmit, shouldSubmitOnboarding]);
 
-  // Clear the "waiting" flag when *any* assistant message appears
-  // useEffect(() => {
-  //   if (messages.some((message) => message.role === 'assistant')) {
-  //     setIsWaitingForInitialResponse(false);
-  //   }
-  // }, [messages]);
+  useEffect(() => {
+    // Check if the last message contains a tool invocation
+    if (
+      messages.length > 0 &&
+      messages[messages.length - 1].parts.some((part) => part.type === 'tool-invocation')
+    ) {
+      setShowAllMessages(false); // Always show last 2 when a tool is called
+    }
+  }, [messages]);
 
   const handleOnboardingSubmit = (formData: FitnessFormValues) => {
     const { message = '' } = formData || {};
@@ -59,7 +65,18 @@ const useChatWorkoutView = () => {
     setShouldSubmitOnboarding(true);
   };
 
+  // Function to scroll to top
+  const scrollToTop = () => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth', // Optional: Adds a smooth scrolling animation
+      });
+    }
+  };
+
   return {
+    activeTab,
     handleInputChange,
     handleOnboardingSubmit,
     handleSubmit,
@@ -70,6 +87,10 @@ const useChatWorkoutView = () => {
     messages,
     newMessageRef,
     status,
+    showAllMessages,
+    scrollToTop,
+    setShowAllMessages,
+    setActiveTab,
   };
 };
 
