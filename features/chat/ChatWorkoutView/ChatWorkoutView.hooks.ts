@@ -1,4 +1,5 @@
 import type { FitnessFormValues } from '@/features/chat/types/fitnessOnBoardingType';
+import type { FitnessProfileProps } from '@/types/fitnessProfile';
 import { useChat } from '@ai-sdk/react';
 import { useEffect, useRef, useState } from 'react';
 
@@ -8,6 +9,7 @@ const useChatWorkoutView = () => {
   const [shouldSubmitOnboarding, setShouldSubmitOnboarding] = useState(false);
   const [activeTab, setActiveTab] = useState<'chat' | 'profile'>('chat');
   const [showAllMessages, setShowAllMessages] = useState(false);
+  const [fitnessProfileData, setFitnessProfileData] = useState<FitnessProfileProps | null>(null);
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const newMessageRef = useRef<HTMLDivElement>(null);
@@ -55,6 +57,45 @@ const useChatWorkoutView = () => {
     }
   }, [messages]);
 
+  // useEffect to fetch the profile on component mount and when activeTab changes to 'profile'
+  useEffect(() => {
+    if (activeTab === 'profile') {
+      fetchFitnessProfile();
+    }
+  }, [activeTab]);
+
+  // useEffect to listen for changes in localStorage
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      console.log('event', event);
+      if (event.key === 'fitnessProfile') {
+        fetchFitnessProfile();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []); // Empty dependency array to run only on mount and unmount
+
+  // Function to fetch the fitness profile from localStorage
+  const fetchFitnessProfile = () => {
+    const storedProfile = localStorage.getItem('fitnessProfile');
+    if (storedProfile) {
+      try {
+        const parsedProfile: FitnessProfileProps = JSON.parse(storedProfile);
+        setFitnessProfileData(parsedProfile);
+      } catch (error) {
+        console.error('Error parsing stored fitness profile:', error);
+        setFitnessProfileData(null);
+      }
+    } else {
+      setFitnessProfileData(null); // Clear the state if no profile is found
+    }
+  };
+
   const handleOnboardingSubmit = (formData: FitnessFormValues) => {
     const { message = '' } = formData || {};
 
@@ -83,6 +124,7 @@ const useChatWorkoutView = () => {
     isWaitingForInitialResponse,
     isOnboarded,
     input,
+    fitnessProfileData,
     messagesContainerRef,
     messages,
     newMessageRef,

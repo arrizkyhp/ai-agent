@@ -1,21 +1,72 @@
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useProfileUpdate } from '@/contexts/ProfileUpdateContext';
 import ToolsLoader from '@/features/chat/components/ToolsLoader';
 import type { FitnessProfileProps } from '@/types/fitnessProfile';
 import { BookOpenCheck, Building, HeartPulse, Target, UserCircle } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 
 interface FitnessProfileComponentProps {
   args: FitnessProfileProps;
   state: 'partial-call' | 'call' | 'result';
+  isProfile?: boolean;
 }
 
 const FitnessProfile = (props: FitnessProfileComponentProps) => {
-  const { args, state } = props;
+  const { args, state, isProfile = false } = props;
   const isLoading = state === 'partial-call' || state === 'call';
+  const [isStreamingComplete, setIsStreamingComplete] = useState(false);
+  const argsRef = useRef<FitnessProfileProps>(args);
+  const { setIsProfileUpdated } = useProfileUpdate();
 
-  console.log(args);
+  useEffect(() => {
+    argsRef.current = args;
+  }, [args]);
+
+  // Define areProfilesEqual using useCallback to memoize it
+  const areProfilesEqual = useCallback(
+    (profile1: FitnessProfileProps, profile2: FitnessProfileProps): boolean => {
+      return JSON.stringify(profile1) === JSON.stringify(profile2);
+    },
+    [], // Empty dependency array if it doesn't depend on component state
+  );
+
+  // Effect to set streaming completion state.  This assumes 'state'
+  // changes to 'result' *after* streaming is done.  Adjust logic if needed.
+  useEffect(() => {
+    if (state === 'result') {
+      setIsStreamingComplete(true);
+    }
+  }, [state]);
+
+  // Effect to save to localStorage *only* when streaming is complete
+  useEffect(() => {
+    if (isStreamingComplete) {
+      const storedProfile = localStorage.getItem('fitnessProfile');
+      let parsedStoredProfile: FitnessProfileProps | null = null;
+
+      if (storedProfile) {
+        try {
+          parsedStoredProfile = JSON.parse(storedProfile);
+        } catch (error) {
+          console.error('Error parsing stored fitness profile:', error);
+        }
+      }
+
+      const currentArgs = argsRef.current;
+
+      // Compare current args with stored profile
+      if (!parsedStoredProfile || !areProfilesEqual(currentArgs, parsedStoredProfile)) {
+        localStorage.setItem('fitnessProfile', JSON.stringify(currentArgs));
+        toast.success('Fitness profile saved ');
+        setIsProfileUpdated(true);
+      }
+    }
+    setIsStreamingComplete(false); // Reset the state after saving
+  }, [isStreamingComplete, areProfilesEqual, setIsProfileUpdated]);
 
   return (
     <>
@@ -23,15 +74,17 @@ const FitnessProfile = (props: FitnessProfileComponentProps) => {
         {isLoading ? (
           <ToolsLoader isLoading={isLoading} />
         ) : (
-          <motion.div
-            key="greeting"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="leading-relaxed mb-4"
-          >
-            {args.introduction}
-          </motion.div>
+          !isProfile && (
+            <motion.div
+              key="greeting"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="leading-relaxed mb-4"
+            >
+              {args.introduction}
+            </motion.div>
+          )
         )}
       </AnimatePresence>
 
@@ -194,7 +247,7 @@ const FitnessProfile = (props: FitnessProfileComponentProps) => {
       </motion.div>
 
       <AnimatePresence>
-        {!isLoading && args.message && (
+        {!isLoading && args.message && !isProfile && (
           <motion.p
             key="greeting"
             initial={{ opacity: 0, y: 10 }}

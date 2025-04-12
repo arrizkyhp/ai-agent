@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
+import { Toaster } from '@/components/ui/sonner';
+import { ProfileUpdateProvider } from '@/contexts/ProfileUpdateContext';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -28,7 +30,10 @@ export default function RootLayout({
         <script src="https://unpkg.com/react-scan/dist/auto.global.js" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans`}>
-        {children}
+        <ProfileUpdateProvider>
+          {children}
+          <Toaster />
+        </ProfileUpdateProvider>
       </body>
     </html>
   );

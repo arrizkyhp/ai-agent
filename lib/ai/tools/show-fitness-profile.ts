@@ -43,8 +43,6 @@ const showFitnessProfile = tool({
       healthAndPhysicalCapacity: healthAndPhysicalCapacity,
     });
 
-    console.log(name);
-
     return {
       name,
       age,

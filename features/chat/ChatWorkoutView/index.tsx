@@ -3,7 +3,10 @@
 import FitnessOnboardingForm from '../components/FitnessOnboardingForm/FitnessOnboardingForm';
 import useChatWorkoutView from './ChatWorkoutView.hooks';
 
+import { Button } from '@/components/ui/button';
+import { useProfileUpdate } from '@/contexts/ProfileUpdateContext';
 import ChatBubbleContainer from '@/features/chat/ChatWorkoutView/components/ChatBubbleContainer';
+import FitnessProfile from '@/features/chat/ChatWorkoutView/components/FitnessProfile';
 import { ChevronLast, ChevronUp } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import ChatTextArea from './components/ChatTextArea';
@@ -22,6 +25,7 @@ const ChatWorkoutView = () => {
     isWaitingForInitialResponse,
     isOnboarded,
     input,
+    fitnessProfileData,
     messagesContainerRef,
     messages,
     newMessageRef,
@@ -31,6 +35,8 @@ const ChatWorkoutView = () => {
     setShowAllMessages,
     setActiveTab,
   } = useChatWorkoutView();
+
+  const { isProfileUpdated, setIsProfileUpdated } = useProfileUpdate();
 
   if (!isOnboarded) {
     return (
@@ -44,26 +50,43 @@ const ChatWorkoutView = () => {
     <div className="max-w-3xl mx-auto flex flex-col min-h-screen">
       <div className="sticky top-0 flex flex-col bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-4 border-b">
         <div className="flex justify-between items-center">
-          <h1 className="text-xl font-bold p-2">Chat Workout</h1>
+          <h1 className="text-xl font-bold p-2">Chat with AI Assistant</h1>
           <div className="flex space-x-2 mt-2">
-            <button
-              type="button"
+            <Button
+              variant="default"
               onClick={() => setActiveTab('chat')}
               className={`px-4 py-2 rounded ${
-                activeTab === 'chat' ? 'bg-primary text-white' : 'bg-gray-200'
+                activeTab === 'chat'
+                  ? 'bg-primary text-white'
+                  : 'bg-gray-200 text-gray-800  hover:bg-gray-300'
               }`}
             >
               Chat
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('profile')}
-              className={`px-4 py-2 rounded ${
-                activeTab === 'profile' ? 'bg-primary text-white' : 'bg-gray-200'
-              }`}
-            >
-              Fitness Profile
-            </button>
+            </Button>
+            <div className="relative">
+              <Button
+                variant="default"
+                onClick={() => {
+                  setActiveTab('profile');
+                  setIsProfileUpdated(false);
+                }}
+                className={`px-4 py-2 rounded ${
+                  activeTab === 'profile'
+                    ? 'bg-primary text-white'
+                    : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                }`}
+              >
+                Fitness Profile
+              </Button>
+
+              {/* Status indicator circle */}
+              {isProfileUpdated && (
+                <span
+                  className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-green-500 border border-white "
+                  aria-label="Profile data is updated"
+                />
+              )}
+            </div>
           </div>
         </div>
 
@@ -128,7 +151,11 @@ const ChatWorkoutView = () => {
 
       {activeTab === 'profile' && (
         <div className="p-4">
-          <p>No fitness profile data available.</p>
+          {fitnessProfileData ? (
+            <FitnessProfile args={fitnessProfileData} state="result" isProfile />
+          ) : (
+            <p>No fitness profile data available.</p>
+          )}
         </div>
       )}
     </div>

@@ -73,7 +73,7 @@ export async function POST(req: Request) {
                     Your goal is to help users develop effective fitness plans tailored to their individual needs, fitness levels, and goals.
 
                     1. User will introduce themselves and their information
-                    2. use tools showFitnessProfile based on the user information
+                    2. use tools showFitnessProfile based on the user information, don't call workoutProgramOverview yet until you sure the user information is complete,
                     3. after that, give information what overview Program focus, Program Structure, other Program like Example Workout Split or anything that related
                        - use tools workoutProgramOverview,
                        - if user want to add additional information update overview using workoutProgramOverview tool,
@@ -104,6 +104,9 @@ export async function POST(req: Request) {
             showFitnessProfile,
             workoutProgramOverview,
             workoutProgramFull,
+          },
+          onStepFinish: ({ toolResults }) => {
+            console.log('toolResults:', toolResults);
           },
         });
 

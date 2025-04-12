@@ -124,13 +124,6 @@ const ChatBubbleContainer = (props: ChatBubbleContainerProps) => {
             <ThinkingMessage />
           </div>
         )}
-
-      {/* REMOVE THIS BUTTON COMPLETELY - The button is now handled in the parent component*/}
-      {/* {messages.length > 2 && (
-        <button onClick={() => setShowAllMessages(!showAllMessages)}>
-          {showAllMessages ? 'View Last 2 Messages' : 'View Past Messages'}
-        </button>
-      )} */}
     </div>
   );
 };
