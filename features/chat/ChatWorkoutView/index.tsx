@@ -4,9 +4,11 @@ import FitnessOnboardingForm from '../components/FitnessOnboardingForm/FitnessOn
 import useChatWorkoutView from './ChatWorkoutView.hooks';
 
 import { Button } from '@/components/ui/button';
+import { useFullProgram } from '@/contexts/FullWorkoutProgramContext';
 import { useProfileUpdate } from '@/contexts/ProfileUpdateContext';
 import ChatBubbleContainer from '@/features/chat/ChatWorkoutView/components/ChatBubbleContainer';
 import FitnessProfile from '@/features/chat/ChatWorkoutView/components/FitnessProfile';
+import FullProgramFitness from '@/features/chat/ChatWorkoutView/components/FullProgramFitness';
 import { ChevronLast, ChevronUp } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import ChatTextArea from './components/ChatTextArea';
@@ -26,17 +28,29 @@ const ChatWorkoutView = () => {
     isOnboarded,
     input,
     fitnessProfileData,
+    fullProgramData,
     messagesContainerRef,
     messages,
     newMessageRef,
     status,
     showAllMessages,
+    fullWorkoutRef,
     scrollToTop,
+    scrollToFullWorkoutTop,
     setShowAllMessages,
     setActiveTab,
   } = useChatWorkoutView();
 
   const { isProfileUpdated, setIsProfileUpdated } = useProfileUpdate();
+  const { isFullProgram, setIsFullProgram } = useFullProgram();
+
+  if (!isOnboarded) {
+    return (
+      <div className="max-w-3xl mx-auto flex items-center min-h-screen">
+        <FitnessOnboardingForm onSubmit={handleOnboardingSubmit} />
+      </div>
+    );
+  }
 
   if (!isOnboarded) {
     return (
@@ -69,6 +83,7 @@ const ChatWorkoutView = () => {
                 onClick={() => {
                   setActiveTab('profile');
                   setIsProfileUpdated(false);
+                  scrollToTop();
                 }}
                 className={`px-4 py-2 rounded ${
                   activeTab === 'profile'
@@ -81,6 +96,32 @@ const ChatWorkoutView = () => {
 
               {/* Status indicator circle */}
               {isProfileUpdated && (
+                <span
+                  className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-green-500 border border-white "
+                  aria-label="Profile data is updated"
+                />
+              )}
+            </div>
+
+            <div className="relative">
+              <Button
+                variant="default"
+                onClick={() => {
+                  setActiveTab('fullWorkout');
+                  setIsFullProgram(false);
+                  scrollToFullWorkoutTop();
+                }}
+                className={`px-4 py-2 rounded ${
+                  activeTab === 'fullWorkout'
+                    ? 'bg-primary text-white'
+                    : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                }`}
+              >
+                Full Workout
+              </Button>
+
+              {/* Status indicator circle */}
+              {isFullProgram && (
                 <span
                   className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-green-500 border border-white "
                   aria-label="Profile data is updated"
@@ -107,7 +148,7 @@ const ChatWorkoutView = () => {
               }}
               onClick={() => {
                 setShowAllMessages(!showAllMessages);
-                scrollToTop(); // Call the scroll function
+                scrollToTop();
               }}
               className="absolute -bottom-10 right-0 self-start w-full text-sm mt-2 px-4 py-2 rounded bg-transparent group "
             >
@@ -155,6 +196,16 @@ const ChatWorkoutView = () => {
             <FitnessProfile args={fitnessProfileData} state="result" isProfile />
           ) : (
             <p>No fitness profile data available.</p>
+          )}
+        </div>
+      )}
+
+      {activeTab === 'fullWorkout' && (
+        <div className="p-4" ref={fullWorkoutRef}>
+          {fullProgramData ? (
+            <FullProgramFitness args={fullProgramData} state="result" isFullWorkout />
+          ) : (
+            <p>No Full Workout data available.</p>
           )}
         </div>
       )}

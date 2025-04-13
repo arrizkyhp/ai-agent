@@ -1,5 +1,6 @@
 import type { FitnessFormValues } from '@/features/chat/types/fitnessOnBoardingType';
 import type { FitnessProfileProps } from '@/types/fitnessProfile';
+import type { WorkoutProgramFullProps } from '@/types/workoutProgramFull';
 import { useChat } from '@ai-sdk/react';
 import { useEffect, useRef, useState } from 'react';
 
@@ -7,12 +8,16 @@ const useChatWorkoutView = () => {
   const [isOnboarded, setIsOnboarded] = useState(false);
   const [isWaitingForInitialResponse, setIsWaitingForInitialResponse] = useState(false);
   const [shouldSubmitOnboarding, setShouldSubmitOnboarding] = useState(false);
-  const [activeTab, setActiveTab] = useState<'chat' | 'profile'>('chat');
+  const [activeTab, setActiveTab] = useState<'chat' | 'profile' | 'fullWorkout'>('chat');
   const [showAllMessages, setShowAllMessages] = useState(false);
+
   const [fitnessProfileData, setFitnessProfileData] = useState<FitnessProfileProps | null>(null);
+  const [fullProgramData, setFullProgramData] = useState<WorkoutProgramFullProps | null>(null);
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const newMessageRef = useRef<HTMLDivElement>(null);
+
+  const fullWorkoutRef = useRef<HTMLDivElement>(null);
 
   const { messages, input, status, setInput, handleInputChange, handleSubmit } = useChat({
     api: '/api/workout-clean',
@@ -62,14 +67,19 @@ const useChatWorkoutView = () => {
     if (activeTab === 'profile') {
       fetchFitnessProfile();
     }
+    if (activeTab === 'fullWorkout') {
+      fetchFullProgram();
+    }
   }, [activeTab]);
 
   // useEffect to listen for changes in localStorage
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
-      console.log('event', event);
       if (event.key === 'fitnessProfile') {
         fetchFitnessProfile();
+      }
+      if (event.key === 'fullWorkout') {
+        fetchFullProgram();
       }
     };
 
@@ -96,6 +106,21 @@ const useChatWorkoutView = () => {
     }
   };
 
+  const fetchFullProgram = () => {
+    const storedProfile = localStorage.getItem('fullWorkout');
+    if (storedProfile) {
+      try {
+        const parsedProfile = JSON.parse(storedProfile);
+        setFullProgramData(parsedProfile);
+      } catch (error) {
+        console.error('Error parsing stored fitness profile:', error);
+        setFullProgramData(null);
+      }
+    } else {
+      setFullProgramData(null); // Clear the state if no profile is found
+    }
+  };
+
   const handleOnboardingSubmit = (formData: FitnessFormValues) => {
     const { message = '' } = formData || {};
 
@@ -116,6 +141,10 @@ const useChatWorkoutView = () => {
     }
   };
 
+  const scrollToFullWorkoutTop = () => {
+    fullWorkoutRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return {
     activeTab,
     handleInputChange,
@@ -125,12 +154,15 @@ const useChatWorkoutView = () => {
     isOnboarded,
     input,
     fitnessProfileData,
+    fullProgramData,
     messagesContainerRef,
     messages,
     newMessageRef,
+    fullWorkoutRef,
     status,
     showAllMessages,
     scrollToTop,
+    scrollToFullWorkoutTop,
     setShowAllMessages,
     setActiveTab,
   };

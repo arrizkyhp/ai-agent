@@ -79,7 +79,7 @@ export async function POST(req: Request) {
                        - if user want to add additional information update overview using workoutProgramOverview tool,
                     4. Then ask for confirmation if user need adjustment and add additional information that user need or proceed to make full program to proceed with the program generation.
                     5. After that, use tools workoutProgramFull to generate the full workout program based on the user information and overview that have been generated before
-                       - if user want to add additional update on full program use workoutProgramFull tool.
+                    6. If user want to add additional or update Full Workout Program that already Generated, update use workoutProgramFull tool.
                     
                         Interaction Guidelines:
                         - Be encouraging and supportive

@@ -3,19 +3,71 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useFullProgram } from '@/contexts/FullWorkoutProgramContext';
 import ToolsLoader from '@/features/chat/components/ToolsLoader';
 import type { WorkoutProgramFullProps } from '@/types/workoutProgramFull';
 import { Calendar, Dumbbell, Info, Timer, Youtube } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 
 interface FullProgramFitnessProps {
   args: WorkoutProgramFullProps;
   state: 'partial-call' | 'call' | 'result';
+  isFullWorkout?: boolean;
 }
 
 const FullProgramFitness = (props: FullProgramFitnessProps) => {
-  const { args, state } = props;
+  const { args, state, isFullWorkout = false } = props;
   const isLoading = state === 'partial-call' || state === 'call';
+  const [isStreamingComplete, setIsStreamingComplete] = useState(false);
+  const argsRef = useRef<WorkoutProgramFullProps>(args);
+  const { setIsFullProgram } = useFullProgram();
+
+  useEffect(() => {
+    argsRef.current = args;
+  }, [args]);
+
+  // Define areProfilesEqual using useCallback to memoize it
+  const areFullWorkoutEqual = useCallback(
+    (fullWorkout1: WorkoutProgramFullProps, fullWorkout2: WorkoutProgramFullProps): boolean => {
+      return JSON.stringify(fullWorkout1) === JSON.stringify(fullWorkout2);
+    },
+    [], // Empty dependency array if it doesn't depend on component state
+  );
+
+  useEffect(() => {
+    if (state === 'result') {
+      setIsStreamingComplete(true);
+    }
+  }, [state]);
+
+  useEffect(() => {
+    if (isStreamingComplete) {
+      const storedProfile = localStorage.getItem('fullWorkout');
+      let parsedStoredFullWorkout: WorkoutProgramFullProps | null = null;
+
+      console.log(parsedStoredFullWorkout);
+
+      if (storedProfile) {
+        try {
+          parsedStoredFullWorkout = JSON.parse(storedProfile);
+        } catch (error) {
+          toast.error(`Error parsing stored full workout: ${error}`);
+        }
+      }
+
+      const currentArgs = argsRef.current;
+
+      // Compare current args with stored profile
+      if (!parsedStoredFullWorkout || !areFullWorkoutEqual(currentArgs, parsedStoredFullWorkout)) {
+        localStorage.setItem('fullWorkout', JSON.stringify(currentArgs));
+        toast.error('Full Workout Saved');
+        setIsFullProgram(true);
+      }
+    }
+    setIsStreamingComplete(false);
+  }, [isStreamingComplete, areFullWorkoutEqual, setIsFullProgram]);
 
   return (
     <div>
@@ -23,14 +75,16 @@ const FullProgramFitness = (props: FullProgramFitnessProps) => {
         {isLoading ? (
           <ToolsLoader isLoading={isLoading} />
         ) : (
-          <motion.div
-            key="greeting"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="leading-relaxed mb-4"
-          >
-            {args.opening}
-          </motion.div>
+          !isFullWorkout && (
+            <motion.div
+              key="greeting"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="leading-relaxed mb-4"
+            >
+              {args.opening}
+            </motion.div>
+          )
         )}
       </AnimatePresence>
       <motion.div
@@ -277,7 +331,7 @@ const FullProgramFitness = (props: FullProgramFitnessProps) => {
         </Card>
       </motion.div>
       <AnimatePresence>
-        {!isLoading && args.messages && (
+        {!isLoading && args.messages && !isFullWorkout && (
           <motion.p
             key="greeting"
             initial={{ opacity: 0, y: 10 }}
