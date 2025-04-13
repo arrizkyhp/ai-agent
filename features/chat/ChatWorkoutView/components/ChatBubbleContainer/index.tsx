@@ -39,8 +39,8 @@ const ChatBubbleContainer = (props: ChatBubbleContainerProps) => {
       return <OverviewFitness args={args} state={state} />;
     }
 
-    if (toolName === 'workoutProgramFull' && state === 'result') {
-      return <FullProgramFitness args={args} />;
+    if (toolName === 'workoutProgramFull') {
+      return <FullProgramFitness args={args} state={state} />;
     }
     return null;
   };

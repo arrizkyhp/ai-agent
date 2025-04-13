@@ -39,6 +39,10 @@ export const workoutProgramFullSchema = z.object({
               sets: z.string().describe('number of sets'),
               reps: z.string().describe('number of reps'),
               rest: z.string().describe('rest time between sets'),
+              urlLink: z
+                .string()
+                .url()
+                .describe('url link of list example of other program, this can be youtube link'),
               notes: z.string().describe('additional notes or tips for the exercise'),
             }),
           )
