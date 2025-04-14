@@ -1,16 +1,16 @@
 // app/api/chat/route.ts
-import { streamText } from "ai";
-import { createOllama } from "ollama-ai-provider";
+import { streamText } from 'ai';
+import { createOllama } from 'ollama-ai-provider';
 
 export const maxDuration = 30;
 
 interface ChatMessage {
-  role: "user" | "assistant" | "system";
+  role: 'user' | 'assistant' | 'system';
   content: string;
 }
 
 if (!process.env.DEEPSEEK_API_KEY) {
-  throw new Error("DEEPSEEK_API_KEY environment variable is not set");
+  throw new Error('DEEPSEEK_API_KEY environment variable is not set');
 }
 
 // const deepseek = createDeepSeek({
@@ -18,7 +18,7 @@ if (!process.env.DEEPSEEK_API_KEY) {
 // });
 
 const ollama = createOllama({
-  baseURL: "http://localhost:11434/api",
+  baseURL: 'http://localhost:11434/api',
 });
 
 // Function to truncate or summarize the chat history if it gets too long
@@ -36,8 +36,10 @@ function manageContext(
     // Simple truncation (can be improved with summarization)
     const truncatedMessages = [];
     let currentLength = 0;
+
     for (let i = messages.length - 1; i >= 0; i--) {
       const message = messages[i];
+
       if (currentLength + message.content.length <= maxContextTokens) {
         truncatedMessages.unshift(message); // Add to the beginning
         currentLength += message.content.length;
@@ -46,6 +48,7 @@ function manageContext(
         break;
       }
     }
+
     return truncatedMessages;
   }
 
@@ -59,9 +62,9 @@ export async function POST(req: Request) {
   const contextMessages = manageContext(messages);
 
   const result = streamText({
-    model: ollama("qwen2.5:3b"),
+    model: ollama('qwen2.5:3b'),
     messages: contextMessages,
-    system: `You are a helpful assistant that make workout programme.`,
+    system: 'You are a helpful assistant that make workout programme.',
   });
 
   return result.toDataStreamResponse();

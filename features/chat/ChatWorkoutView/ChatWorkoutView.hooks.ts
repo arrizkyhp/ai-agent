@@ -1,8 +1,10 @@
+import { useEffect, useRef, useState } from 'react';
+
+import { useChat } from '@ai-sdk/react';
+
 import type { FitnessFormValues } from '@/features/chat/types/fitnessOnBoardingType';
 import type { FitnessProfileProps } from '@/types/fitnessProfile';
 import type { WorkoutProgramFullProps } from '@/types/workoutProgramFull';
-import { useChat } from '@ai-sdk/react';
-import { useEffect, useRef, useState } from 'react';
 
 const useChatWorkoutView = () => {
   const [isOnboarded, setIsOnboarded] = useState(false);
@@ -29,6 +31,7 @@ const useChatWorkoutView = () => {
     if (newMessageRef.current) {
       // Get the current scroll position
       const container = messagesContainerRef.current;
+
       if (container) {
         const headerOffset = 90; // Height of the floating header
 
@@ -93,9 +96,11 @@ const useChatWorkoutView = () => {
   // Function to fetch the fitness profile from localStorage
   const fetchFitnessProfile = () => {
     const storedProfile = localStorage.getItem('fitnessProfile');
+
     if (storedProfile) {
       try {
         const parsedProfile: FitnessProfileProps = JSON.parse(storedProfile);
+
         setFitnessProfileData(parsedProfile);
       } catch (error) {
         console.error('Error parsing stored fitness profile:', error);
@@ -108,9 +113,11 @@ const useChatWorkoutView = () => {
 
   const fetchFullProgram = () => {
     const storedProfile = localStorage.getItem('fullWorkout');
+
     if (storedProfile) {
       try {
         const parsedProfile = JSON.parse(storedProfile);
+
         setFullProgramData(parsedProfile);
       } catch (error) {
         console.error('Error parsing stored fitness profile:', error);
