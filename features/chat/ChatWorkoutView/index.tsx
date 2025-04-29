@@ -61,8 +61,6 @@ const ChatWorkoutView = () => {
     setActiveTab,
   } = useChatWorkoutView();
 
-  console.log(messages);
-
   const { isProfileUpdated, setIsProfileUpdated } = useProfileUpdate();
   const { isFullProgram, setIsFullProgram } = useFullProgram();
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
@@ -90,8 +88,6 @@ const ChatWorkoutView = () => {
   const handleNavigate = (id: string) => {
     const element = sectionRefs.current[id];
 
-    console.log(element);
-
     if (element) {
       // Scroll to the element with some offset for the header
       const headerOffset = 80;
@@ -112,7 +108,13 @@ const ChatWorkoutView = () => {
 
       {/* Table of Contents */}
       {messages.length > 1 && activeTab === 'chat' &&
-      <TableOfContents sections={dynamicTocSections} onNavigate={handleNavigate} isLoading={status !== 'ready'} />
+      <TableOfContents
+        sections={dynamicTocSections}
+        onNavigate={handleNavigate}
+        isLoading={status !== 'ready'}
+        setShowAllMessages={setShowAllMessages}
+        showAllMessages={showAllMessages}
+      />
       }
       <div className="sticky top-0 flex flex-col bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-4 border-b">
         <div className="flex justify-between items-center">

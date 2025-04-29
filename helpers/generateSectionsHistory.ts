@@ -9,14 +9,17 @@ interface TocSection {
 
 // Helper function to extract a title from a message part
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
+// @ts-ignore
 export const getTitleFromMessagePart = (part): string | null => {
   if (part.type === 'tool-invocation' && part.toolInvocation.state === 'result') {
     if (part.toolInvocation.toolName === 'showFitnessProfile') {
       return 'Fitness Profile';
     }
-    if (part.toolInvocation.toolName === 'showFullWorkoutProgram') {
-      return 'Personalized Workout Program';
+    if (part.toolInvocation.toolName === 'workoutProgramOverview') {
+      return 'Program Overview';
+    }
+    if (part.toolInvocation.toolName === 'workoutProgramFull') {
+      return 'Workout Program';
     }
     if (part.toolInvocation.toolName === 'showNutritionOverview') {
       return 'Nutrition Overview';

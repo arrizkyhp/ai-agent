@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import { ChevronDown, LoaderCircle, Menu, MessagesSquare } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
@@ -13,11 +13,22 @@ interface TableOfContentsProps {
   }[]
   onNavigate: (id: string) => void
   isLoading?: boolean
+  showAllMessages: boolean;
+  setShowAllMessages: Dispatch<SetStateAction<boolean>>;
 }
 
-const TableOfContents = ({ sections, onNavigate, isLoading = false }: TableOfContentsProps) => {
+const TableOfContents = (
+  {
+    sections,
+    onNavigate,
+    isLoading = false,
+    showAllMessages,
+    setShowAllMessages
+  }: TableOfContentsProps
+) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  const lastSectionId = sections.length > 0 ? sections[sections.length - 1].id : null;
 
   // Toggle the table of contents
   const toggleTOC = () => {
@@ -29,6 +40,13 @@ const TableOfContents = ({ sections, onNavigate, isLoading = false }: TableOfCon
     }
     setIsOpen(!isOpen);
   };
+
+  useEffect(() => {
+    if (!showAllMessages) {
+      // If showing only last messages, set active section to the last one
+      setActiveSection(lastSectionId);
+    }
+  }, [showAllMessages, lastSectionId]); // Dependencies: showAllMessages and lastSectionId
 
   // Handle navigation to a section
   const handleNavigate = (id: string) => {
@@ -62,12 +80,13 @@ const TableOfContents = ({ sections, onNavigate, isLoading = false }: TableOfCon
         <div className="flex gap-2">
           <button
             disabled={isLoading}
+            onClick={() => setShowAllMessages(!showAllMessages)}
             className="flex items-center gap-2 bg-[#252422] text-[#FFFCF2] px-3 py-2 rounded-md text-sm font-medium mb-1 shadow-md"
           >
 
             <MessagesSquare className="h-4 w-4" />
             {/*<LoaderCircle className="animate-spin" />*/}
-            <span className="hidden md:inline">View Last Message</span>
+            <span className="hidden md:inline">View {`${showAllMessages ? 'Last' : 'Past'}`} Message</span>
 
           </button>
           <button
@@ -90,21 +109,27 @@ const TableOfContents = ({ sections, onNavigate, isLoading = false }: TableOfCon
         <div className="bg-[#252422] text-[#FFFCF2] rounded-md shadow-lg p-2 w-48 md:w-56 max-h-[70vh] overflow-y-auto">
           <div className="py-1 px-2 text-xs text-[#CCC5B9] uppercase font-medium">Navigation</div>
           <ul className="space-y-1">
-            {sections.map((section) => (
-              <li key={section.id}>
-                <button
-                  onClick={() => handleNavigate(section.id)}
-                  className={`w-full text-left px-2 py-1.5 text-sm rounded hover:bg-[#403D39] flex items-center ${
-                    activeSection === section.id ? 'bg-[#403D39]/50' : ''
-                  }`}
-                >
-                  <div className="flex items-center">
-                    {activeSection === section.id && <div className="w-1 h-5 bg-[#EB5E28] rounded-full mr-2"></div>}
-                    <span className={activeSection === section.id ? 'ml-0' : 'ml-3'}>{section.title}</span>
-                  </div>
-                </button>
-              </li>
-            ))}
+            {sections.map((section) => {
+              const isLastSection = section.id === lastSectionId;
+              const isMuted = !showAllMessages && !isLastSection;
+
+              return (
+                <li key={section.id}>
+                  <button
+                    onClick={() => handleNavigate(section.id)}
+                    className={`w-full text-left px-2 py-1.5 text-sm rounded hover:bg-[#403D39] flex items-center ${
+                      activeSection === section.id ? 'bg-[#403D39]/50' : ''
+                    } ${isMuted ? 'opacity-50 cursor-not-allowed' : ''}`} // Apply muted style and prevent cursor
+                    disabled={isMuted} // Disable the button when muted
+                  >
+                    <div className="flex items-center">
+                      {activeSection === section.id && <div className="w-1 h-5 bg-[#EB5E28] rounded-full mr-2"></div>}
+                      <span className={activeSection === section.id ? 'ml-0' : 'ml-3'}>{section.title}</span>
+                    </div>
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}

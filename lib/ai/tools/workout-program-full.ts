@@ -1,5 +1,6 @@
-import { workoutProgramFullSchema } from '@/types/workoutProgramFull';
 import { tool } from 'ai';
+
+import { workoutProgramFullSchema } from '@/types/workoutProgramFull';
 
 const workoutProgramFull = tool({
   description:

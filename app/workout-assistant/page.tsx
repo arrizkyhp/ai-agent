@@ -1,5 +1,7 @@
 import ChatWorkoutView from '@/features/chat/ChatWorkoutView';
 
-export default function WorkoutCleanPage() {
+const WorkoutCleanPage = () => {
   return <ChatWorkoutView />;
-}
+};
+
+export default WorkoutCleanPage;
