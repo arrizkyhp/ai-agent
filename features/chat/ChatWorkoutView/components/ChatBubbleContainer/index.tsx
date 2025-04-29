@@ -16,6 +16,7 @@ interface ChatBubbleContainerProps {
   isWaitingForInitialResponse: boolean;
   isOnboarded: boolean;
   showAllMessages: boolean;
+  sectionRefs: RefObject<{ [key: string]: HTMLDivElement | null }>;
 }
 
 const ChatBubbleContainer = (props: ChatBubbleContainerProps) => {
@@ -27,6 +28,7 @@ const ChatBubbleContainer = (props: ChatBubbleContainerProps) => {
     isWaitingForInitialResponse,
     isOnboarded,
     showAllMessages,
+    sectionRefs,
   } = props;
 
   const renderToolInfo = (toolInvocation: ToolInvocation) => {
@@ -95,21 +97,58 @@ const ChatBubbleContainer = (props: ChatBubbleContainerProps) => {
               } `}
             >
               <div className="flex gap-3">
+                {/* Assign ref to the flex-1 div, but the key in sectionRefs needs to match the dynamicTocSections ID */}
                 <div className="flex-1">
-                  {message?.parts?.map((part) => {
+                  {message?.parts?.map((part, partIndex) => { // Use partIndex here
+                    // Generate the ID for this specific message part
+                    const sectionId = `message-${messages.findIndex(m => m.id === message.id)}-part-${partIndex}`; // Find original index in full messages array
+
+                    // Skip assigning ref to the very first text part if it's skipped in TOC
+                    if (messages.findIndex(m => m.id === message.id) === 0 && partIndex === 0 && part.type === 'text' && messages.length > 1) {
+                      // You can optionally render the content without a ref if it's not in the TOC
+                      if (part.type === 'text') {
+                        return <MemoizedMarkdown id={`${message.id}-${partIndex}`} key={`${message.id}-${partIndex}`} content={part.text} />;
+                      }
+                      if (part.type === 'tool-invocation') {
+                        return <div key={`${message.id}-${partIndex}`}>{renderToolInfo(part.toolInvocation)}</div>;
+                      }
+
+                      return null;
+                    }
+
                     if (part.type === 'text') {
                       return (
-                        <MemoizedMarkdown
-                          key={message.id}
-                          id={message.id}
-                          content={message.content}
-                        />
+                        <div
+                          key={sectionId} // Use the sectionId as the key
+                          id={sectionId} // Set the ID attribute for potential other uses (though ref is used for scrolling)
+                          ref={(el) => {
+                            if (el && sectionRefs.current) {
+                              sectionRefs.current[sectionId] = el;
+                            }
+                          }}
+                        >
+                          <MemoizedMarkdown id={sectionId} key={sectionId} content={part.text} />
+                        </div>
                       );
                     }
 
                     if (part.type === 'tool-invocation') {
-                      return renderToolInfo(part.toolInvocation);
+                      return (
+                        <div
+                          key={sectionId} // Use the sectionId as the key
+                          id={sectionId} // Set the ID attribute
+                          ref={(el) => {
+                            if (el && sectionRefs.current) {
+                              sectionRefs.current[sectionId] = el;
+                            }
+                          }}
+                        >
+                          {renderToolInfo(part.toolInvocation)}
+                        </div>
+                      );
                     }
+
+                    return null;
                   })}
                 </div>
               </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 
 import { ChevronLast, ChevronUp } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
@@ -12,6 +12,7 @@ import { useProfileUpdate } from '@/contexts/ProfileUpdateContext';
 import ChatBubbleContainer from '@/features/chat/ChatWorkoutView/components/ChatBubbleContainer';
 import FitnessProfile from '@/features/chat/ChatWorkoutView/components/FitnessProfile';
 import FullProgramFitness from '@/features/chat/ChatWorkoutView/components/FullProgramFitness';
+import { generateTocSections } from '@/helpers/generateSectionsHistory';
 
 import FitnessOnboardingForm from '../components/FitnessOnboardingForm/FitnessOnboardingForm';
 
@@ -24,18 +25,18 @@ import useChatWorkoutView from './ChatWorkoutView.hooks';
 // !TODO: find out if generating tools has loader, if has add loader based on tool type
 
 // Define the sections for the table of contents
-const tocSections = [
-  { id: 'intro', title: 'Introduction', isCard: false },
-  { id: 'fitness-profile', title: 'Fitness Profile', isCard: true },
-  { id: 'time-constraints', title: 'Time Constraints', isCard: false },
-  { id: 'workout-overview', title: 'Workout Program Overview', isCard: true },
-  { id: 'program-confirmation', title: 'Program Confirmation', isCard: false },
-  { id: 'personalized-program', title: 'Personalized Workout Program', isCard: true },
-  { id: 'meal-request', title: 'Meal Recommendations Request', isCard: false },
-  { id: 'nutrition-overview', title: 'Nutrition Overview', isCard: true },
-  { id: 'budget-constraints', title: 'Budget Constraints', isCard: false },
-  { id: 'chicken-meal-plan', title: 'Chicken-Based Meal Plan', isCard: true },
-];
+// const tocSections = [
+//   { id: 'intro', title: 'Introduction', isCard: false },
+//   { id: 'fitness-profile', title: 'Fitness Profile', isCard: true },
+//   { id: 'time-constraints', title: 'Time Constraints', isCard: false },
+//   { id: 'workout-overview', title: 'Workout Program Overview', isCard: true },
+//   { id: 'program-confirmation', title: 'Program Confirmation', isCard: false },
+//   { id: 'personalized-program', title: 'Personalized Workout Program', isCard: true },
+//   { id: 'meal-request', title: 'Meal Recommendations Request', isCard: false },
+//   { id: 'nutrition-overview', title: 'Nutrition Overview', isCard: true },
+//   { id: 'budget-constraints', title: 'Budget Constraints', isCard: false },
+//   { id: 'chicken-meal-plan', title: 'Chicken-Based Meal Plan', isCard: true },
+// ];
 
 const ChatWorkoutView = () => {
   const {
@@ -60,9 +61,15 @@ const ChatWorkoutView = () => {
     setActiveTab,
   } = useChatWorkoutView();
 
+  console.log(messages);
+
   const { isProfileUpdated, setIsProfileUpdated } = useProfileUpdate();
   const { isFullProgram, setIsFullProgram } = useFullProgram();
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+
+  const dynamicTocSections = useMemo(() => generateTocSections(messages), [messages]);
+
+  console.log(dynamicTocSections);
 
   if (!isOnboarded) {
     return (
@@ -83,6 +90,8 @@ const ChatWorkoutView = () => {
   const handleNavigate = (id: string) => {
     const element = sectionRefs.current[id];
 
+    console.log(element);
+
     if (element) {
       // Scroll to the element with some offset for the header
       const headerOffset = 80;
@@ -96,12 +105,14 @@ const ChatWorkoutView = () => {
     }
   };
 
+  console.log(dynamicTocSections);
+
   return (
     <div className="max-w-3xl mx-auto flex flex-col min-h-screen">
 
       {/* Table of Contents */}
       {messages.length > 1 && activeTab === 'chat' &&
-      <TableOfContents sections={tocSections} onNavigate={handleNavigate} isLoading={status !== 'ready'} />
+      <TableOfContents sections={dynamicTocSections} onNavigate={handleNavigate} isLoading={status !== 'ready'} />
       }
       <div className="sticky top-0 flex flex-col bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-4 border-b">
         <div className="flex justify-between items-center">
@@ -219,6 +230,7 @@ const ChatWorkoutView = () => {
             isWaitingForInitialResponse={isWaitingForInitialResponse}
             isOnboarded={isOnboarded}
             showAllMessages={showAllMessages}
+            sectionRefs={sectionRefs}
           />
 
           <ChatTextArea
