@@ -1,22 +1,41 @@
 'use client';
 
-import FitnessOnboardingForm from '../components/FitnessOnboardingForm/FitnessOnboardingForm';
-import useChatWorkoutView from './ChatWorkoutView.hooks';
+import { useRef } from 'react';
+
+import { ChevronLast, ChevronUp } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
 
 import { Button } from '@/components/ui/button';
+import TableOfContents from '@/components/ui/tableOfContents';
 import { useFullProgram } from '@/contexts/FullWorkoutProgramContext';
 import { useProfileUpdate } from '@/contexts/ProfileUpdateContext';
 import ChatBubbleContainer from '@/features/chat/ChatWorkoutView/components/ChatBubbleContainer';
 import FitnessProfile from '@/features/chat/ChatWorkoutView/components/FitnessProfile';
 import FullProgramFitness from '@/features/chat/ChatWorkoutView/components/FullProgramFitness';
-import { ChevronLast, ChevronUp } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
+
+import FitnessOnboardingForm from '../components/FitnessOnboardingForm/FitnessOnboardingForm';
+
 import ChatTextArea from './components/ChatTextArea';
+import useChatWorkoutView from './ChatWorkoutView.hooks';
 
 // !TODO: Important, chat always forget fitness profile, Add local storage
 // !TODO: add better-auth & supabase
 
 // !TODO: find out if generating tools has loader, if has add loader based on tool type
+
+// Define the sections for the table of contents
+const tocSections = [
+  { id: 'intro', title: 'Introduction', isCard: false },
+  { id: 'fitness-profile', title: 'Fitness Profile', isCard: true },
+  { id: 'time-constraints', title: 'Time Constraints', isCard: false },
+  { id: 'workout-overview', title: 'Workout Program Overview', isCard: true },
+  { id: 'program-confirmation', title: 'Program Confirmation', isCard: false },
+  { id: 'personalized-program', title: 'Personalized Workout Program', isCard: true },
+  { id: 'meal-request', title: 'Meal Recommendations Request', isCard: false },
+  { id: 'nutrition-overview', title: 'Nutrition Overview', isCard: true },
+  { id: 'budget-constraints', title: 'Budget Constraints', isCard: false },
+  { id: 'chicken-meal-plan', title: 'Chicken-Based Meal Plan', isCard: true },
+];
 
 const ChatWorkoutView = () => {
   const {
@@ -43,6 +62,7 @@ const ChatWorkoutView = () => {
 
   const { isProfileUpdated, setIsProfileUpdated } = useProfileUpdate();
   const { isFullProgram, setIsFullProgram } = useFullProgram();
+  const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   if (!isOnboarded) {
     return (
@@ -59,9 +79,30 @@ const ChatWorkoutView = () => {
       </div>
     );
   }
+
+  const handleNavigate = (id: string) => {
+    const element = sectionRefs.current[id];
+
+    if (element) {
+      // Scroll to the element with some offset for the header
+      const headerOffset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+    }
+  };
 
   return (
     <div className="max-w-3xl mx-auto flex flex-col min-h-screen">
+
+      {/* Table of Contents */}
+      {messages.length > 1 && activeTab === 'chat' &&
+      <TableOfContents sections={tocSections} onNavigate={handleNavigate} isLoading={status !== 'ready'} />
+      }
       <div className="sticky top-0 flex flex-col bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-4 border-b">
         <div className="flex justify-between items-center">
           <h1 className="text-xl font-bold p-2">Chat with AI Assistant</h1>

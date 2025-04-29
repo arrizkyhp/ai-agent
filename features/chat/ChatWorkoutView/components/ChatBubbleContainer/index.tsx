@@ -1,11 +1,12 @@
+import type { Message, ToolInvocation } from 'ai';
+import type { RefObject } from 'react';
+
 import { MemoizedMarkdown } from '@/components/memoized-markdown';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import FitnessProfile from '@/features/chat/ChatWorkoutView/components/FitnessProfile';
 import FullProgramFitness from '@/features/chat/ChatWorkoutView/components/FullProgramFitness';
 import OverviewFitness from '@/features/chat/ChatWorkoutView/components/OverviewFitness';
 import ThinkingMessage from '@/features/chat/ChatWorkoutView/components/ThinkingMessage';
-import type { Message, ToolInvocation } from 'ai';
-import type { RefObject } from 'react';
 
 interface ChatBubbleContainerProps {
   messages: Message[];
@@ -42,6 +43,7 @@ const ChatBubbleContainer = (props: ChatBubbleContainerProps) => {
     if (toolName === 'workoutProgramFull') {
       return <FullProgramFitness args={args} state={state} />;
     }
+
     return null;
   };
 
